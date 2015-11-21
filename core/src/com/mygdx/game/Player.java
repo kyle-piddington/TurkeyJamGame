@@ -42,6 +42,10 @@ public class Player extends GameObject{
 
     public void move(float x, float y, float xBound, float yBound)
     {
+        float mag = (float) Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+        x /= mag;
+        y /= mag;
+
         if(position[0] > 0)
             position[0] += x;
         else
