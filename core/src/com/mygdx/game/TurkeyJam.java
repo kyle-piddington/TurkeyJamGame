@@ -22,7 +22,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	//SpriteBatch batch;
 	Texture img;
     World world;
-	OrthographicCamera camera;
+	GameCamera camera;
 	SpriteBatch spriteBatch;
     @Override
 	public void create () {
@@ -30,10 +30,12 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		//img = new Texture("badlogic.jpg");
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
-        world = new World(new TmxMapLoader().load("maps/rpg_test_map.tmx"));
+        world = new World(new TmxMapLoader().load("maps/debug-map.tmx"));
         world.addGameObject(new TestGameObject(new Sprite(new Texture("badlogic.jpg"))));
-		camera = new OrthographicCamera();
+		camera = new GameCamera();
 		camera.setToOrtho(false,w,h);
+        camera.translate(11*64,64*64 - 10*64);
+        camera.zoom = 1.f;
 		camera.update();
 
 
@@ -43,8 +45,9 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 
 	@Override
 	public void render () {
+        camera.rotate(0.5f);
         camera.update();
-		world.update(1/30.0f);
+		world.update(camera, 1/30.0f);
         Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
