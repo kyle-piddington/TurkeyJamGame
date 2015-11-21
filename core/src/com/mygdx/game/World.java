@@ -1,11 +1,13 @@
 package com.mygdx.game;
 
 import aurelienribon.tweenengine.TweenManager;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -104,6 +106,7 @@ public class World {
     private List<SpriteRenderable> billboardedRenderables;
     private List<Stick> stickList;
     private List<Fire> fires;
+    private List<GameObject> removeObjects;
     public World(TiledMap map)
     {
         World.manager = new TweenManager();
@@ -112,6 +115,9 @@ public class World {
         updatables = new LinkedList<Updatable>();
         renderables = new LinkedList<Renderable>();
         billboardedRenderables = new ArrayList<SpriteRenderable>();
+        stickList = new LinkedList<Stick>();
+        removeObjects = new LinkedList<GameObject>();
+
         //Set up trees
         TiledMapTileLayer trees = (TiledMapTileLayer)map.getLayers().get("Trees");
         trees.setVisible(false);
@@ -131,6 +137,17 @@ public class World {
                     billboardedRenderables.add(treeRenderable);
                 }
             }
+        }
+        MapLayer sticks = map.getLayers().get("Sticks");
+        MapObjects obs = sticks.getObjects();
+
+        Texture stickTexture = new Texture("art/sprites/Stick.png");
+        for(int i = 0; i < obs.getCount(); i++)
+        {
+            Stick s = new Stick(new Sprite(stickTexture));
+
+            s.setPosition((Float) obs.get(i).getProperties().get("x"), (Float) obs.get(i).getProperties().get("y"));
+            addGameObject(s);
         }
 
 
@@ -183,7 +200,7 @@ public class World {
         BillboardComarator cmp = new BillboardComarator(camera.view);
         Collections.sort(billboardedRenderables,cmp);
         World.manager.update(dt);
-
+        removeGameObjects(); //Clear any removal lists
     }
     void addGameObject(GameObject object)
     {
@@ -198,14 +215,25 @@ public class World {
 
     void removeGameObject(GameObject object)
     {
-        billboardedRenderables.remove(object);
-        updatables.remove(object);
-        if(object instanceof Stick)
-        {
-            stickList.remove(object);
-        }
+        removeObjects.add(object);
     }
 
+    void removeGameObjects()
+    {
+        for(GameObject object : removeObjects) {
+            billboardedRenderables.remove(object);
+            updatables.remove(object);
+            if (object instanceof Stick) {
+                stickList.remove(object);
+            }
+        }
+        removeObjects.clear();
+    }
+
+    List<Stick> getStickList()
+    {
+        return stickList;
+    }
 
     void addRenderable(Renderable r)
     {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="64" tileheight="64" nextobjectid="8">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="64" tileheight="64" nextobjectid="16">
  <tileset firstgid="1" name="RPG set" tilewidth="64" tileheight="64" tilecount="229">
   <tile id="0">
    <image width="64" height="64" source="../art/RPGTilesheet/rpgTile000.png"/>
@@ -1006,6 +1006,14 @@
    <image width="100" height="100" source="../art/GameIcons/Black/2x/zoomOut.png"/>
   </tile>
  </tileset>
+ <tileset firstgid="335" name="GameObjects" tilewidth="128" tileheight="32" tilecount="2">
+  <tile id="0">
+   <image width="32" height="32" source="../art/sprites/Stick.png"/>
+  </tile>
+  <tile id="1">
+   <image width="128" height="32" source="../art/sprites/fire.png"/>
+  </tile>
+ </tileset>
  <layer name="Background" width="64" height="64">
   <data encoding="base64" compression="zlib">
    eJztzrERQFAQBcCLUAIq+IP+6/MaEP8bs8HmO6pqAPBpiTW2BpcZ9jjibHCZ4Yo7ngYXAAAAAAAAAAAAAAAAAODfXgPhf5g=
@@ -1017,6 +1025,9 @@
   </data>
  </layer>
  <objectgroup name="Sticks">
-  <object id="2" gid="317" x="687.992" y="468.47" width="100" height="100"/>
+  <object id="11" gid="335" x="717.869" y="407.672" width="32" height="32"/>
+  <object id="12" gid="335" x="519.972" y="465.392" width="32" height="32"/>
+  <object id="13" gid="335" x="866.292" y="471.576" width="32" height="32"/>
+  <object id="14" gid="335" x="845.678" y="380.873" width="32" height="32"/>
  </objectgroup>
 </map>
