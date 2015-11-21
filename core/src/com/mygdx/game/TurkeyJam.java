@@ -25,6 +25,10 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	GameCamera camera;
 	SpriteBatch spriteBatch;
 	Player player;
+	Stick testStick;
+
+	boolean moveLeft,moveRight,moveUp,moveDown,pickUpStick;
+
 
     @Override
 	public void create () {
@@ -33,14 +37,15 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
         world = new World(new TmxMapLoader().load("maps/debug-map.tmx"));
-		player = new Player(new Sprite(new Texture("PlayerPlaceholder.png")));
+		player = new Player(new Sprite(new Texture("art/sprites/PlayerPlaceholder.png")));
+		testStick = new Stick(new Sprite(new Texture("art/sprites/Stick.png")));
         world.addGameObject(player);
+		world.addGameObject(testStick);
 		camera = new GameCamera();
 		camera.setToOrtho(false,w,h);
         //camera.translate(11*64,64*64 - 10*64);
 		camera.zoom = 1.f;
 		camera.update();
-
 
 		Gdx.input.setInputProcessor(this);
 	}
@@ -57,40 +62,32 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         world.render(camera,spriteBatch);
+		movePlayer();
     }
 
 	@Override
-	public boolean keyDown(int keycode)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode)
+	public boolean keyDown(int keycode) //holding
 	{
 		switch (keycode)
 		{
 			case Input.Keys.LEFT:
 				//camera.translate(-32,0);
-				player.move(-32,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+				moveLeft = true;
 				break;
 			case Input.Keys.RIGHT:
 				//camera.translate(32,0);
-				player.move(32,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+				moveRight = true;
 				break;
 			case Input.Keys.UP:
 				//camera.translate(0,-32);
-				player.move(0,-32,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+				moveUp = true;
 				break;
 			case Input.Keys.DOWN:
 				//camera.translate(0,32);
-				player.move(0,32,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+				moveDown = true;
 				break;
 			case Input.Keys.SPACE:
-				for(Stick stick : world.getStickList()) {
-					if (player.pickUpStick(stick))
-						world.removeGameObject(stick);
-				}
+				pickUpStick = true;
 			case Input.Keys.NUM_1:
 				//tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
 				break;
@@ -99,6 +96,57 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 				break;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) //releasing
+ 	{
+		switch (keycode)
+		{
+			case Input.Keys.LEFT:
+				//camera.translate(-32,0);
+				moveLeft = false;
+				break;
+			case Input.Keys.RIGHT:
+				//camera.translate(32,0);
+				moveRight = false;
+				break;
+			case Input.Keys.UP:
+				//camera.translate(0,-32);
+				moveUp = false;
+				break;
+			case Input.Keys.DOWN:
+				//camera.translate(0,32);
+				moveDown = false;
+				break;
+			case Input.Keys.SPACE:
+				pickUpStick = false;
+			case Input.Keys.NUM_1:
+				//tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
+				break;
+			case Input.Keys.NUM_2:
+				//tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
+				break;
+		}
+		return false;
+	}
+
+	public void movePlayer()
+	{
+		if(moveLeft)
+			player.move(-32,0,Gdx.graphics.getWidth() * 10,Gdx.graphics.getHeight() * 10);
+		if(moveRight)
+			player.move(32,0,Gdx.graphics.getWidth() * 10,Gdx.graphics.getHeight() * 10);
+		if(moveUp)
+			player.move(0,32,Gdx.graphics.getWidth() * 10,Gdx.graphics.getHeight() * 10);
+		if(moveDown)
+			player.move(0,-32,Gdx.graphics.getWidth() * 10,Gdx.graphics.getHeight() * 10);
+		if(pickUpStick) {
+			for (Stick stick : world.getStickList()) {
+				if (player.pickUpStick(stick))
+					world.removeGameObject(stick);
+			}
+		}
 	}
 
 	@Override
