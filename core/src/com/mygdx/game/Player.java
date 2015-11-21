@@ -60,4 +60,11 @@ public class Player extends GameObject{
             sticks++;
         }
     }
+    @Override
+    public void setPosition(float x, float y)
+    {
+        position[0] = x;
+        position[1] = y;
+        super.setPosition(x,y);
+    }
 }

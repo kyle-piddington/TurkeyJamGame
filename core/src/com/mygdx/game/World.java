@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -18,7 +19,7 @@ import java.util.*;
  * Created by kpidding on 11/20/15.
  */
 public class World {
-
+    public static TweenManager manager = new TweenManager();
     private class BillboardComarator implements Comparator<SpriteRenderable>
     {
         private Matrix4 v;
@@ -47,15 +48,65 @@ public class World {
             else return -1;
         }
     }
+
+    private class FireComarator implements Comparator<Fire>
+    {
+
+        private float x;
+        private float y;
+        FireComarator(float playerX, float playerY)
+        {
+            this.x = playerX;
+            this.y = playerY;
+        }
+        @Override
+        public int compare(Fire fire, Fire fire2) {
+            //if A is out, and B is out, fires are equal
+            if(fire.isExtinguished() && fire2.isExtinguished())
+            {
+                return 0;
+            }
+
+            else if(fire.isExtinguished())
+            {
+                return 1;
+            }
+            //if B is out, A is greater
+            else if(fire2.isExtinguished())
+            {
+                return -1;
+            }
+            else
+            {
+                float d1 = (x - fire.getSprite().getX()) * (x - fire.getSprite().getX()) +
+                            (y - fire.getSprite().getY()) * (y - fire.getSprite().getY());
+                float d2 = (x - fire2.getSprite().getX()) * (x - fire2.getSprite().getX()) +
+                        (y - fire2.getSprite().getY()) * (y - fire2.getSprite().getY());
+                if(d1 < d2)
+                {
+                    return -1;
+                }
+                else if(d1 == d2)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+        }
+    }
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private List<Updatable> updatables;
     private List<Renderable> renderables;
     private List<SpriteRenderable> billboardedRenderables;
     private List<Stick> stickList;
-
+    private List<Fire> fires;
     public World(TiledMap map)
     {
+        World.manager = new TweenManager();
         this.map = map;
         renderer = new OrthogonalTiledMapRenderer(map);
         updatables = new LinkedList<Updatable>();
@@ -131,7 +182,7 @@ public class World {
         }
         BillboardComarator cmp = new BillboardComarator(camera.view);
         Collections.sort(billboardedRenderables,cmp);
-
+        World.manager.update(dt);
 
     }
     void addGameObject(GameObject object)

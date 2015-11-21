@@ -16,6 +16,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.mygdx.game.TweenWrappers.SpriteAccessor;
 import com.mygdx.game.test.TestGameObject;
 
 public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
@@ -26,21 +27,23 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	SpriteBatch spriteBatch;
 	Player player;
 
+
     @Override
 	public void create () {
+        Tween.registerAccessor(Sprite.class,new SpriteAccessor());
 		spriteBatch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
         world = new World(new TmxMapLoader().load("maps/debug-map.tmx"));
-		player = new Player(new Sprite(new Texture("PlayerPlaceholder.png")));
+		player = new Player(new Sprite(new Texture("art/sprites/stick.png")));
         world.addGameObject(player);
 		camera = new GameCamera();
-		camera.setToOrtho(false,w,h);
-        //camera.translate(11*64,64*64 - 10*64);
+		camera.setToOrtho(false, w, h);
+        player.setPosition(11*64,64*64 - 9*64);
 		camera.zoom = 1.f;
 		camera.update();
-
+        world.addGameObject(new Fire(11*64,64*64 - 8*64));
 
 		Gdx.input.setInputProcessor(this);
 	}
@@ -51,7 +54,9 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		camera.position.x = player.getSprite().getX() + player.getSprite().getOriginX();
 		camera.position.y = player.getSprite().getY() + player.getSprite().getOriginY();
 		camera.update();
-		world.update(camera, 1/30.0f);
+		world.update(camera, Gdx.graphics.getDeltaTime());
+
+
         Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -80,16 +85,14 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 				break;
 			case Input.Keys.UP:
 				//camera.translate(0,-32);
-				player.move(0,-32,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+				player.move(0, -32, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				break;
 			case Input.Keys.DOWN:
 				//camera.translate(0,32);
 				player.move(0,32,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 				break;
 			case Input.Keys.SPACE:
-				for(Stick stick : )
-				player.pickUpStick(stick);
-				world.removeGameObject(stick);
+
 			case Input.Keys.NUM_1:
 				//tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
 				break;
