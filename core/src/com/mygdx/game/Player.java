@@ -32,6 +32,7 @@ public class Player extends GameObject{
 
     public void move(float x, float y, float xBound, float yBound)
     {
+
         if(position[0] > 0)
             position[0] += x;
         else

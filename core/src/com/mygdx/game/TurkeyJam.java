@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.TweenWrappers.SpriteAccessor;
 import com.mygdx.game.test.TestGameObject;
 
@@ -148,14 +149,27 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 
 	public void movePlayer()
 	{
-		if(moveLeft)
-			player.move(-32,0,mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
-		if(moveRight)
-			player.move(32,0,mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
-		if(moveUp)
-			player.move(0,32,mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
-		if(moveDown)
-			player.move(0,-32,mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
+        Vector2 vel = new Vector2();
+        if(moveLeft)
+        {
+           vel.x = -32.f;
+        }
+        if(moveRight)
+        {
+            vel.x = 32.f;
+        }
+        if(moveUp)
+        {
+            vel.y = 32.f;
+        }
+        if(moveDown)
+        {
+            vel.y = -32.f;
+        }
+        vel.nor();
+        world.checkCollision(player,vel);
+        vel.nor();
+        player.move(vel.x,vel.y,mapWidth-player.getSprite().getWidth(),mapHeight-player.getSprite().getHeight());
 
 	}
 

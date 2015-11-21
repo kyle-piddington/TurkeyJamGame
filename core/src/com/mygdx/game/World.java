@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.*;
@@ -107,6 +108,8 @@ public class World {
     private List<Stick> stickList;
     private List<Fire> fires;
     private List<GameObject> removeObjects;
+    TiledMapTileLayer trees;
+    float tileSize;
     public World(TiledMap map)
     {
         World.manager = new TweenManager();
@@ -119,9 +122,10 @@ public class World {
         removeObjects = new LinkedList<GameObject>();
 
         //Set up trees
-        TiledMapTileLayer trees = (TiledMapTileLayer)map.getLayers().get("Trees");
+        trees = (TiledMapTileLayer)map.getLayers().get("Trees");
         trees.setVisible(false);
         Texture treeTexture = new Texture("art/sprites/summer_pine_tree_tiles.png");
+        tileSize = trees.getTileWidth();
         for(int tx = 0; tx < trees.getWidth(); tx++)
         {
             for(int ty = 0; ty < trees.getHeight(); ty++)
@@ -247,6 +251,45 @@ public class World {
     void addUpdateable(Updatable u)
     {
         updatables.add(u);
+    }
+
+    int getSign(float t)
+    {
+        if(t < 0)
+            return -1;
+        else if(t == 0)
+            return  0;
+        else
+            return 1;
+    }
+    //
+    void checkCollision(Player player, Vector2  direction)
+    {
+        //Check X direction if it enters new cell
+
+
+        float w = player.getSprite().getWidth()  *  getSign(direction.x);
+        float h = player.getSprite().getHeight() *  getSign(direction.y);
+
+        int cellInitialX = (int)(Math.floor(player.getSprite().getX()/tileSize)) + 1;
+        int cellInitialY = (int)(Math.floor(player.getSprite().getY()/tileSize));
+
+        int cellFinalX = (int)Math.floor((player.getSprite().getX() + direction.x + w/2)/tileSize) + 1;
+        int cellFinalY = (int)Math.floor((player.getSprite().getY() + direction.y + h/2)/tileSize);
+
+        if(trees.getCell(cellFinalX,cellInitialY)!=null)
+        {
+            direction.x = 0;
+        }
+        if(trees.getCell(cellInitialX,cellFinalY) !=null)
+        {
+            direction.y = 0;
+        }
+
+
+
+
+        //Move offset based off of sign of movePosition
     }
 
 

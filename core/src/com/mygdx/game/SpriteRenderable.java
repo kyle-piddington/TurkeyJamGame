@@ -28,6 +28,14 @@ public class SpriteRenderable implements Renderable {
     {
         return sprite;
     }
+    public float getX()
+    {
+        return sprite.getX();
+    }
+    public float getY()
+    {
+        return sprite.getY();
+    }
 
     @Override
     public void render(SpriteBatch sb) {
