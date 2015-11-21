@@ -88,6 +88,11 @@ public class World {
 
     }
 
+    TiledMap getMap()
+    {
+        return map;
+    }
+
 
     void render(GameCamera camera, SpriteBatch batch)
     {
