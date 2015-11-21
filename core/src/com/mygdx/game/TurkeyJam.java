@@ -46,6 +46,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		mapHeight = temp.getHeight() * temp.getTileHeight();
 		mapWidth = temp.getWidth() * temp.getTileWidth();
 		player = new Player(new Sprite(new Texture("art/sprites/PlayerPlaceholder.png")));
+		player.setSpeed(4);
 		testStick = new Stick(new Sprite(new Texture("art/sprites/Stick.png")));
         world.addGameObject(player);
 		world.addGameObject(testStick);
@@ -149,13 +150,13 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	public void movePlayer()
 	{
 		if(moveLeft)
-			player.move(-32,0,mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
+			player.move(-player.getSpeed(),0,mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
 		if(moveRight)
-			player.move(32,0,mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
+			player.move(player.getSpeed(),0,mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
 		if(moveUp)
-			player.move(0,32,mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
+			player.move(0,player.getSpeed(),mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
 		if(moveDown)
-			player.move(0,-32,mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
+			player.move(0,-player.getSpeed(),mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
 
 	}
 
