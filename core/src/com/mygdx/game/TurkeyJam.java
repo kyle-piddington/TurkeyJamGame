@@ -10,43 +10,47 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.mygdx.game.test.TestGameObject;
 
 public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	//SpriteBatch batch;
 	Texture img;
-	TiledMap tiledMap;
+    World world;
 	OrthographicCamera camera;
-	TiledMapRenderer tiledMapRenderer;
-	
-	@Override
+	SpriteBatch spriteBatch;
+    @Override
 	public void create () {
-		//batch = new SpriteBatch();
+		spriteBatch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
-
+        world = new World(new TmxMapLoader().load("maps/rpg_test_map.tmx"));
+        world.addGameObject(new TestGameObject(new Sprite(new Texture("badlogic.jpg"))));
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false,w,h);
 		camera.update();
-		tiledMap = new TmxMapLoader().load("maps/rpg_test_map.tmx");
-		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+
+
 		Gdx.input.setInputProcessor(this);
 	}
 
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+        camera.update();
+		world.update(1/30.0f);
+        Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		camera.update();
-		tiledMapRenderer.setView(camera);
-		tiledMapRenderer.render();
-	}
+
+        world.render(camera,spriteBatch);
+    }
 
 	@Override
 	public boolean keyDown(int keycode)
@@ -72,10 +76,10 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 				camera.translate(0,32);
 				break;
 			case Input.Keys.NUM_1:
-				tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
+				//tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
 				break;
 			case Input.Keys.NUM_2:
-				tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
+				//tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
 				break;
 		}
 		return false;
