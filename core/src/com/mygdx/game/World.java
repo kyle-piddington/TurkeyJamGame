@@ -61,6 +61,7 @@ public class World {
         updatables = new LinkedList<Updatable>();
         renderables = new LinkedList<Renderable>();
         billboardedRenderables = new ArrayList<SpriteRenderable>();
+        stickList = new LinkedList<Stick>();
         //Set up trees
         TiledMapTileLayer trees = (TiledMapTileLayer)map.getLayers().get("Trees");
         trees.setVisible(false);
@@ -155,6 +156,10 @@ public class World {
         }
     }
 
+    List<Stick> getStickList()
+    {
+        return stickList;
+    }
 
     void addRenderable(Renderable r)
     {

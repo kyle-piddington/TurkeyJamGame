@@ -87,9 +87,10 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 				player.move(0,32,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 				break;
 			case Input.Keys.SPACE:
-				for(Stick stick : )
-				player.pickUpStick(stick);
-				world.removeGameObject(stick);
+				for(Stick stick : world.getStickList()) {
+					if (player.pickUpStick(stick))
+						world.removeGameObject(stick);
+				}
 			case Input.Keys.NUM_1:
 				//tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
 				break;

@@ -53,11 +53,13 @@ public class Player extends GameObject{
         return stick.getSprite().getBoundingRectangle().overlaps(this.getSprite().getBoundingRectangle());
     }
 
-    public void pickUpStick(Stick stick)
+    public boolean pickUpStick(Stick stick)
     {
         if(overStick(stick))
         {
             sticks++;
+            return true;
         }
+        return false;
     }
 }
