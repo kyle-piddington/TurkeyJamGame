@@ -30,8 +30,9 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false,w,h);
 		camera.update();
-		tiledMap = new TmxMapLoader().load("rpg_test_map.tmx");
+		tiledMap = new TmxMapLoader().load("maps/rpg_test_map.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+		Gdx.input.setInputProcessor(this);
 	}
 
 	@Override
