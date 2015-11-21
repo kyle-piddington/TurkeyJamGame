@@ -8,16 +8,18 @@ import com.mygdx.game.Updatable;
 /**
  * Created by kpidding on 11/20/15.
  */
-abstract public class GameObject implements Renderable, Updatable {
-    private Sprite sprite;
-    @Override
-    public void render(SpriteBatch sb) {
-        //Default Gameobjects contain no render informaton
+abstract public class GameObject extends SpriteRenderable implements Renderable, Updatable {
+
+    public GameObject(Sprite sprite)
+    {
+        super(sprite);
     }
+
 
     @Override
     public void update(float dt)
     {
         //Default Gameobjects contain no update
     }
+
 }

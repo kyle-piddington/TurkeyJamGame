@@ -24,6 +24,8 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
     World world;
 	GameCamera camera;
 	SpriteBatch spriteBatch;
+	Player player;
+
     @Override
 	public void create () {
 		spriteBatch = new SpriteBatch();
@@ -31,11 +33,12 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
         world = new World(new TmxMapLoader().load("maps/debug-map.tmx"));
-        world.addGameObject(new TestGameObject(new Sprite(new Texture("badlogic.jpg"))));
+		player = new Player(new Sprite(new Texture("PlayerPlaceholder.png")));
+        world.addGameObject(player);
 		camera = new GameCamera();
 		camera.setToOrtho(false,w,h);
-        camera.translate(11*64,64*64 - 10*64);
-        camera.zoom = 1.f;
+        //camera.translate(11*64,64*64 - 10*64);
+		camera.zoom = 1.f;
 		camera.update();
 
 
@@ -44,9 +47,10 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 
 
 	@Override
-	public void render () {
-        camera.rotate(0.5f);
-        camera.update();
+	public void render (){
+		camera.position.x = player.getSprite().getX() + player.getSprite().getOriginX();
+		camera.position.y = player.getSprite().getY() + player.getSprite().getOriginY();
+		camera.update();
 		world.update(camera, 1/30.0f);
         Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -67,17 +71,25 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		switch (keycode)
 		{
 			case Input.Keys.LEFT:
-				camera.translate(-32,0);
+				//camera.translate(-32,0);
+				player.move(-32,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 				break;
 			case Input.Keys.RIGHT:
-				camera.translate(32,0);
+				//camera.translate(32,0);
+				player.move(32,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 				break;
 			case Input.Keys.UP:
-				camera.translate(0,-32);
+				//camera.translate(0,-32);
+				player.move(0,-32,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 				break;
 			case Input.Keys.DOWN:
-				camera.translate(0,32);
+				//camera.translate(0,32);
+				player.move(0,32,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 				break;
+			case Input.Keys.SPACE:
+				for(Stick stick : )
+				player.pickUpStick(stick);
+				world.removeGameObject(stick);
 			case Input.Keys.NUM_1:
 				//tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
 				break;

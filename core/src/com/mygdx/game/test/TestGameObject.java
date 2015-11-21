@@ -11,6 +11,7 @@ public class TestGameObject extends GameObject {
     Sprite sprite;
     public TestGameObject(Sprite sprite)
     {
+        super(sprite);
         this.sprite = sprite;
     }
     public void update(float dt)

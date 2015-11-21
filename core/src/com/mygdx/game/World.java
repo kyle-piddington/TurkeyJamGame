@@ -52,6 +52,8 @@ public class World {
     private List<Updatable> updatables;
     private List<Renderable> renderables;
     private List<SpriteRenderable> billboardedRenderables;
+    private List<Stick> stickList;
+
     public World(TiledMap map)
     {
         this.map = map;
@@ -134,9 +136,26 @@ public class World {
     }
     void addGameObject(GameObject object)
     {
-        renderables.add(object);
+        billboardedRenderables.add(object);
         updatables.add(object);
+        if(object instanceof Stick)
+        {
+            stickList.add((Stick) object);
+        }
+
     }
+
+    void removeGameObject(GameObject object)
+    {
+        billboardedRenderables.remove(object);
+        updatables.remove(object);
+        if(object instanceof Stick)
+        {
+            stickList.remove(object);
+        }
+    }
+
+
     void addRenderable(Renderable r)
     {
         renderables.add(r);
