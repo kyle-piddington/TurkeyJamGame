@@ -12,9 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.mygdx.game.TweenWrappers.SpriteAccessor;
 import com.mygdx.game.test.TestGameObject;
@@ -30,7 +28,9 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	Player player;
 	Stick testStick;
 
-	boolean moveLeft,moveRight,moveUp,moveDown,pickUpStick;
+	float mapHeight, mapWidth;
+
+	boolean moveLeft,moveRight,moveUp,moveDown;
 
 
 
@@ -42,6 +42,9 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
         world = new World(new TmxMapLoader().load("maps/debug-map.tmx"));
+		TiledMapTileLayer temp = (TiledMapTileLayer) world.getMap().getLayers().get(0);
+		mapHeight = temp.getHeight() * temp.getTileHeight();
+		mapWidth = temp.getWidth() * temp.getTileWidth();
 		player = new Player(new Sprite(new Texture("art/sprites/PlayerPlaceholder.png")));
 		testStick = new Stick(new Sprite(new Texture("art/sprites/Stick.png")));
         world.addGameObject(player);
@@ -95,8 +98,11 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 				moveDown = true;
 				break;
 			case Input.Keys.SPACE:
-				pickUpStick = true;
 
+				for (Stick stick : world.getStickList()) {
+					if (player.pickUpStick(stick))
+						world.removeGameObject(stick);
+				}
 			case Input.Keys.NUM_1:
 				//tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
 				break;
@@ -129,8 +135,8 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 				moveDown = false;
 				break;
 			case Input.Keys.SPACE:
-				pickUpStick = false;
-    		case Input.Keys.NUM_1:
+                break;
+			case Input.Keys.NUM_1:
 				//tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
 				break;
 			case Input.Keys.NUM_2:
@@ -143,20 +149,14 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	public void movePlayer()
 	{
 		if(moveLeft)
-			player.move(-32,0,Gdx.graphics.getWidth() * 10,Gdx.graphics.getHeight() * 10);
+			player.move(-32,0,mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
 		if(moveRight)
-			player.move(32,0,Gdx.graphics.getWidth() * 10,Gdx.graphics.getHeight() * 10);
+			player.move(32,0,mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
 		if(moveUp)
-			player.move(0,32,Gdx.graphics.getWidth() * 10,Gdx.graphics.getHeight() * 10);
+			player.move(0,32,mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
 		if(moveDown)
-			player.move(0,-32,Gdx.graphics.getWidth() * 10,Gdx.graphics.getHeight() * 10);
-		if(pickUpStick) {
-        	for (Stick stick : world.getStickList()) {
-				if (player.pickUpStick(stick))
-					world.removeGameObject(stick);
-			}
+			player.move(0,-32,mapHeight - player.getSprite().getHeight(),mapWidth - player.getSprite().getWidth());
 
-		}
 	}
 
 	@Override

@@ -24,6 +24,7 @@ public class Player extends GameObject{
 
     }
 
+
     public void update(float dt)
     {
         setPosition(position[0],position[1]);
@@ -40,6 +41,11 @@ public class Player extends GameObject{
             position[0] += x;
         else
             position[0] = xBound;
+
+        if(position[1] > 0)
+            position[1] += y;
+        else
+            position[1] = 0;
 
         if(position[1] < yBound)
             position[1] += y;
