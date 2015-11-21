@@ -12,13 +12,16 @@ import com.mygdx.game.TweenWrappers.SpriteAccessor;
 
 public class TurkeyJam extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture img;
 	TweenManager manager = new TweenManager();
-    Sprite sprite = new Sprite(new Texture("badlogic.jpg"));
+    Sprite sprite;
 	@Override
 	public void create () {
+        Tween.registerAccessor(Sprite.class,new SpriteAccessor());
 		batch = new SpriteBatch();
-
+        sprite = new Sprite(new Texture("badlogic.jpg"));
+        Tween.to(sprite,SpriteAccessor.TWEEN_RGB,1.0f)
+                .target(0.f,1.f,0.f)
+                .start(manager);
     }
 
 	@Override

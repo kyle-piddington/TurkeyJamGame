@@ -1,6 +1,7 @@
 package com.mygdx.game.TweenWrappers;
 
 import aurelienribon.tweenengine.TweenAccessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 /**
@@ -81,8 +82,7 @@ public class SpriteAccessor implements TweenAccessor<Sprite>{
 
     @Override
     public void setValues(Sprite target, int tweenType, float[] newValues) {
-        switch (tweenType)
-        {
+        switch (tweenType) {
             case TWEEN_X:
                 target.setX(newValues[0]);
                 break;
@@ -90,14 +90,40 @@ public class SpriteAccessor implements TweenAccessor<Sprite>{
                 target.setY(newValues[1]);
                 break;
             case TWEEN_XY:
-                target.setPosition(newValues[0],newValues[1]);
+                target.setPosition(newValues[0], newValues[1]);
                 break;
+            case TWEEN_ROT:
+                target.setRotation(newValues[0]);
+                break;
+
             case TWEEN_SCALEX:
-                target.setScale(newValues[0],target.getScaleY());
+                target.setScale(newValues[0], target.getScaleY());
                 break;
             case TWEEN_SCALEY:
                 target.setScale(target.getScaleX(), newValues[0]);
                 break;
+            case TWEEN_SCALEXY:
+                target.setScale(newValues[0], newValues[1]);
+                break;
+
+            case TWEEN_SCALEXYROT:
+                target.setScale(newValues[0], newValues[1]);
+                target.setRotation(newValues[2]);
+                break;
+            case TWEEN_XYSCALEXYROT:
+                target.setPosition(newValues[0], newValues[1]);
+                target.setScale(newValues[2], newValues[3]);
+                target.setRotation(newValues[4]);
+                break;
+            case TWEEN_RGB:
+                target.setColor(new Color(newValues[0],newValues[1],newValues[2],target.getColor().a));
+                break;
+            case TWEEN_ALPHA:
+                Color color = target.getColor();
+                target.setColor(new Color(color.r,color.g,color.b,newValues[0]));
+
+            default:
+                assert false;
         }
     }
 }
