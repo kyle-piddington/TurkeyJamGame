@@ -31,6 +31,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 	//Stick testStick;
 	Sound windAmbient;
 	Sound fireAmbient;
+    Sound torchAmbeint;
 	Sound fastSteps;
 	Sound medSteps;
 	Sound slowSteps;
@@ -39,7 +40,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 	GoalMap target;
 	float mapHeight, mapWidth;
     float blizzardtimer = 30.0f;
-	long windID, fireID, fastID, medID, slowID;
+	long windID, fireID, torchID, fastID, medID, slowID;
     Random rand = new Random(System.currentTimeMillis());
 	boolean moveLeft,moveRight,moveUp,moveDown;
     private CameraDirection camDir = CameraDirection.NORTH;
@@ -69,6 +70,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
             break;
             case TORCH:
                 player.lightTorch();
+                torchSound();
                 gameGui.updateBranchCount(player.getSticks());
                 gameGui.updateTinderCount(player.getTinderboxes());
                 break;
@@ -197,6 +199,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 
 		fireMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/ambient_fire_music.wav"));
 		fireAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/fire_sound.wav"));
+        torchAmbeint = Gdx.audio.newSound(Gdx.files.internal("sound/fire_sound.wav"));
 		windAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/wind_sound.wav"));
 
 		fastSteps = Gdx.audio.newSound(Gdx.files.internal("sound/footsteps_fast.wav"));
@@ -204,8 +207,12 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 		slowSteps = Gdx.audio.newSound(Gdx.files.internal("sound/footsteps_slow.wav"));
 
 		windID = windAmbient.loop(0.2f);
+
 		fireID = fireAmbient.loop(0f);
         fireAmbient.pause();
+
+        torchID = torchAmbeint.loop(0.7f);
+        torchAmbeint.pause();
 
 		fireMusic.play();
 		fireMusic.setLooping(true);
@@ -303,6 +310,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 			fastSteps.dispose();
 			fireMusic.dispose();
 			fireAmbient.dispose();
+            torchAmbeint.dispose();
 
 			endGameBatch.begin();
 			loseGame.draw(endGameBatch);
@@ -316,6 +324,8 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 			fireMusic.dispose();
 			fireAmbient.dispose();
 			windAmbient.dispose();
+            torchAmbeint.setVolume(torchID, 0.5f);
+            torchAmbeint.resume();
 
 			endGameBatch.begin();
 			winGame.draw(endGameBatch);
@@ -340,6 +350,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
         gameGui.setFireActive(player.canLightFire());
 
         gameGui.updateTorchUI(player.getTorch().getLitPercent());
+        torchSound();
         gameGui.updateThermoGUI(player.getHeat());
         gameGui.update();
     }
@@ -610,6 +621,21 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 
 		return currSpeed;
 	}
+
+    private void torchSound()
+    {
+        boolean isLit;
+        float litPercent;     //time left before the torch burns out
+
+        isLit = player.getTorch().isLit();
+
+        if(isLit) {
+
+            litPercent = player.getTorch().getLitPercent();
+            torchAmbeint.setVolume(torchID, 0.7f * litPercent);
+            torchAmbeint.resume();
+        }
+    }
 
 	@Override
 	public boolean keyTyped(char character)
