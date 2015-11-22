@@ -15,6 +15,8 @@ public class Player extends GameObject{
     public final float MAX_HEAT =  100;
     public final float MAX_DISTANCE_WARM = 256;
     public final float MAX_DISTANCE_HOLD = 384;
+    public final float START_WARM = 65;
+    public final float START_FREEZE = 30;
 
     public Player(Sprite sprite)
     {
@@ -92,7 +94,7 @@ public class Player extends GameObject{
         System.out.println(distance);
         if(heat < MAX_HEAT && distance < MAX_DISTANCE_WARM) {
             System.out.println("hi");
-            heat += (12.0/60.0);
+            heat += (10.0/60.0);
             System.out.println("warm: " + heat);
         }
         if(heat > 0 && distance > MAX_DISTANCE_HOLD)
@@ -104,8 +106,14 @@ public class Player extends GameObject{
 
     public void freezeSlowdown()
     {
-        if(heat > 65 && speed < MAX_SPEED)
+        if(heat > START_WARM && speed < MAX_SPEED)
         {
+            speed += 0.05f;
+        }
+
+        if(heat < START_FREEZE && speed > MIN_SPEED)
+        {
+            speed -= 0.05f;
         }
     }
 }

@@ -151,6 +151,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 
 	public void movePlayer()
 	{
+		player.freezeSlowdown();
         Vector2 vel = new Vector2();
         if(moveLeft)
         {
@@ -184,7 +185,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 			float tempX = (player.getX() - world.getFire().get(0).getX());
 			float tempY = (player.getY() - world.getFire().get(0).getY());
 
-			distance = (float) Math.sqrt((tempX * tempX) + (tempY + tempY));
+			distance = (float) Math.sqrt((tempX * tempX) + (tempY * tempY));
 		}
 		player.fireWarm(distance);
 	}
