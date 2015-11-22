@@ -13,6 +13,49 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Player extends GameObject{
     public static final int NUM_PLAYER_FRAMES= 16;
 
+    public boolean canGetStick() {
+        return sticks < MAX_STICKS;
+    }
+
+    public boolean canLightTorch() {
+        if(sticks > 0)
+        {
+            if(lastFireDist < Fire.FireDist)
+            {
+                return true;
+            }
+            else if(tinderboxes > 0)
+            {
+                return true;
+            }
+        }
+        return false;
+
+    }
+    public boolean canLightFire()
+    {
+        if(sticks >= 3)
+        {
+            if(torch.isLit())
+            {
+                return true;
+            }
+            else if(tinderboxes > 0)
+            {
+                return true;
+            }
+        }
+    ;    return false;
+    }
+
+    public void useBranches(int i)
+    {
+        sticks-=i;
+    }
+    public void useTinderboxes(int i) {
+        tinderboxes-=i;
+    }
+
     enum Direction
     {
         UP,
@@ -210,6 +253,7 @@ public class Player extends GameObject{
     {
         if(overStick(stick) && sticks < MAX_STICKS)
         {
+
             sticks++;
             return true;
         }
@@ -264,7 +308,7 @@ public class Player extends GameObject{
     {
         if(sticks > 0)
         {
-            if(lastFireDist < 32.f)
+            if(lastFireDist < Fire.FireDist)
             {
                 System.out.println( "lit torch on fire");
                 torch = new Torch();

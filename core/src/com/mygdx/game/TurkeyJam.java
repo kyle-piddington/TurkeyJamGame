@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
+public class TurkeyJam extends ApplicationAdapter implements InputProcessor, ActionCallback{
 	//SpriteBatch batch;
 	Texture img;
     World world;
@@ -55,6 +55,37 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
     private boolean blizzardCalmed = false;
     private  static final float BLIZZARD_MIN =  20.f;
     private static final float BLIZZARD_RANGE = 60.f;
+
+    @Override
+    public void send(ActionTile.ACTIONS action) {
+        switch (action)
+        {
+            case GRAB:
+                for (Stick stick : world.getStickList()) {
+                    if (player.pickUpStick(stick)) {
+                        world.removeGameObject(stick);
+                        break;
+                    }
+            }
+            break;
+            case TORCH:
+                player.lightTorch();
+                break;
+            case LIGHT:
+
+                player.useBranches(3);
+                if(!player.getTorch().isLit())
+                {
+                    player.useTinderboxes(1);
+                }
+                world.addGameObject(new Fire(player.getX(),player.getY()));
+                break;
+            default:
+                //Do nothing
+
+        }
+    }
+
     enum CameraDirection
     {
         NORTH,
@@ -63,7 +94,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
         WEST
     }
 
-
+    GUI gameGui;
     @Override
 	public void create () {
         Tween.registerAccessor(Sprite.class,new SpriteAccessor());
@@ -85,8 +116,10 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 
 		camera = new GameCamera();
 		camera.setToOrtho(false, w, h);
+
         player.setPosition(11*64,64*64 - 9*64);
-		camera.zoom = 1.f;
+
+        camera.zoom = 1.f;
 		camera.update();
         world.addGameObject(new Fire(11*64,64*64 - 8*64));
 
@@ -109,6 +142,8 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		endGameBatch = new SpriteBatch();
 		winGame = new Sprite(new Texture("art/sprites/WinScreen.png"));
 		loseGame = new Sprite(new Texture("art/sprites/DeathScreen.png"));
+
+        gameGui = new GUI(this);
 	}
 
 
@@ -140,7 +175,8 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 			spriteBatch.begin();
 
 			blizMask.draw(spriteBatch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-			spriteBatch.end();
+			gameGui.draw(spriteBatch);
+            spriteBatch.end();
 
 			blizzardtimer -= Gdx.graphics.getDeltaTime();
 			if (blizzardtimer <= 0) {
@@ -157,6 +193,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 
 
 			}
+            updateGUI();
 			movePlayer();
 			healPlayer();
 		}
@@ -177,7 +214,25 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 
     }
 
-	@Override
+    private void updateGUI() {
+        boolean grabActive = false;
+        if(player.canGetStick()) {
+            for (Stick stick : world.getStickList()) {
+                if (player.overStick(stick)) {
+                    grabActive = true;
+                }
+            }
+        }
+        gameGui.setGrabActive(grabActive);
+
+        gameGui.setTorchActive(player.canLightTorch());
+
+        gameGui.setFireActive(player.canLightFire());
+
+        gameGui.update();
+    }
+
+    @Override
 	public boolean keyDown(int keycode) //holding
 	{
 		switch (keycode)
@@ -198,13 +253,6 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 				//camera.translate(0,32);
 				moveDown = true;
 				break;
-			case Input.Keys.SPACE:
-
-				for (Stick stick : world.getStickList()) {
-					if (player.pickUpStick(stick))
-						world.removeGameObject(stick);
-				}
-                break;
 			case Input.Keys.NUM_1:
 				world.addGameObject(new Fire(player.getX(),player.getY()));
                 break;
@@ -252,24 +300,38 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 
     void setRandCamDir()
     {
-       
-        switch (rand.nextInt(4))
+        ArrayList<CameraDirection> directions = new ArrayList<CameraDirection>();
+        directions.add( CameraDirection.NORTH);
+        directions.add( CameraDirection.SOUTH);
+        directions.add( CameraDirection.EAST);
+        directions.add(CameraDirection.WEST);
+        directions.remove(camDir);
+        int rnd =  rand.nextInt(7);
+        if(rnd < 2)
         {
-            case 0:
+            camDir = directions.get(0);
+        }
+        else if(rnd < 4)
+        {
+            camDir = directions.get(1);
+        }
+        else if(rnd < 6)
+        {
+            camDir = directions.get(2);
+        }
+        switch (camDir)
+        {
+            case NORTH:
                 camera.setRotation(0f);
-                camDir = CameraDirection.NORTH;
                 break;
-            case 1:
+            case EAST:
                 camera.setRotation(90f);
-                camDir = CameraDirection.EAST;
                 break;
-            case 2:
+            case SOUTH:
                 camera.setRotation(180f);
-                camDir = CameraDirection.SOUTH;
                 break;
-            case 4:
+            case WEST:
                 camera.setRotation(270f);
-                camDir = CameraDirection.WEST;
                 break;
         }
     }
@@ -346,7 +408,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 			distance = (float) Math.sqrt((tempX * tempX) + (tempY * tempY));
 		    if(nearestFire.isExtinguished())
                 distance = 100000;
-            if(distance < 64)
+            if(distance < Fire.FireDist)
             {
 
                fireUI.move(nearestFire.getX(),nearestFire.getY());
@@ -394,6 +456,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button)
 	{
+        gameGui.onClick();
 		return false;
 	}
 
