@@ -50,6 +50,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 	boolean moveLeft,moveRight,moveUp,moveDown;
     private CameraDirection camDir = CameraDirection.NORTH;
     private FireUIElement fireUI;
+	private int currSpeed;
 
 	SpriteBatch endGameBatch;
 	Sprite winGame;
@@ -144,6 +145,14 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 		fastSteps.play();
 		fastSteps.setLooping(true);
 		fastSteps.setVolume(0f);
+
+		medSteps.play();
+		medSteps.setLooping(true);
+		medSteps.setVolume(0f);
+
+		slowSteps.play();
+		slowSteps.setLooping(true);
+		slowSteps.setVolume(0f);
 
         fireUI = new FireUIElement();
 		Gdx.input.setInputProcessor(this);
@@ -250,26 +259,22 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 			case Input.Keys.LEFT:
 				//camera.translate(-32,0);
 				moveLeft = true;
-				if(fastSteps.getVolume() == 0f)
-					fastSteps.setVolume(1f);
+				currSpeed = stepSpeed();
 				break;
 			case Input.Keys.RIGHT:
 				//camera.translate(32,0);
 				moveRight = true;
-				if(fastSteps.getVolume() == 0f)
-					fastSteps.setVolume(1f);
+				currSpeed = stepSpeed();
 				break;
 			case Input.Keys.UP:
 				//camera.translate(0,-32);
-				if(fastSteps.getVolume() == 0f)
-					fastSteps.setVolume(1f);
 				moveUp = true;
+				currSpeed = stepSpeed();
 				break;
 			case Input.Keys.DOWN:
 				//camera.translate(0,32);
 				moveDown = true;
-				if(fastSteps.getVolume() == 0f)
-					fastSteps.setVolume(1f);
+				currSpeed = stepSpeed();
 				break;
 			case Input.Keys.NUM_1:
 				world.addGameObject(new Fire(player.getX(),player.getY()));
@@ -403,7 +408,14 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
         }
 		if(!moveLeft && !moveRight && !moveUp && !moveDown)
 		{
-			fastSteps.setVolume(0f);
+			switch (currSpeed) {
+				case 1: fastSteps.setVolume(0f);
+					break;
+				case 2: medSteps.setVolume(0f);
+					break;
+				case 3: slowSteps.setVolume(0f);
+					break;
+			}
 		}
         Vector2 directionalVel = camVector(vel);
         directionalVel.nor();
@@ -469,6 +481,39 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 		fireMusic.setVolume(0f);
 		fireAmbient.setVolume(fireID, 0f);
 		windAmbient.setVolume(windID, volume);
+	}
+
+	private int stepSpeed()
+	{
+		float heatLevel;
+		int currSpeed; // 1 = fast, 2 = med, 3 = slow
+
+		heatLevel = player.getHeat();
+
+		if(heatLevel >= 65f) {
+
+			if(fastSteps.getVolume() == 0f)
+				fastSteps.setVolume(1f);
+			medSteps.setVolume(0f);
+			currSpeed = 1;
+		}
+		else if(heatLevel >= 30f) {
+
+			if(medSteps.getVolume() == 0f)
+				medSteps.setVolume(1f);
+			fastSteps.setVolume(0f);
+			slowSteps.setVolume(0f);
+			currSpeed = 2;
+		}
+		else {
+
+			if(slowSteps.getVolume() == 0f)
+				slowSteps.setVolume(1f);
+			medSteps.setVolume(0f);
+			currSpeed = 3;
+		}
+
+		return currSpeed;
 	}
 
 	@Override
