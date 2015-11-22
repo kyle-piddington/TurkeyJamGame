@@ -278,8 +278,8 @@ public class Player extends GameObject{
         boolean withinY = ((this.getY() < maxStartY) && (this.getY() > minStartY));
 
         boolean atHome = (withinX && withinY);
-        System.out.println(this.startPosition[0] + " " + this.startPosition[1]);
-        System.out.println(this.getX() + " " + this.getY());
+        //System.out.println(this.startPosition[0] + " " + this.startPosition[1]);
+        //System.out.println(this.getX() + " " + this.getY());
         return mapFound && atHome;
     }
 
@@ -314,7 +314,7 @@ public class Player extends GameObject{
         if(heat > 0 && distance > MAX_DISTANCE_HOLD)
         {
             //torch reduces heat loss in 1/5th
-            heat -= ((torch.isLit() ? 1.0 : 5.0)/60.0);
+            heat -= ((torch.isLit() ? 3.0 : 5.0)/60.0);
         }
 
         if(heat <= 0)

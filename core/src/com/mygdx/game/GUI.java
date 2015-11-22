@@ -21,6 +21,13 @@ public class GUI {
     private FireTile fireTile;
     private static final int fireTileX = -Gdx.graphics.getWidth()/2 + 190, fireTileY = -Gdx.graphics.getHeight()/2 + 30;
 
+    private TurnLTile lTile;
+    private static final int lTileX = -Gdx.graphics.getWidth()/2 + 230, lTileY = -Gdx.graphics.getHeight()/2 + 30;
+
+    private TurnRTile rTile;
+    private static final int rTileX = -Gdx.graphics.getWidth()/2 + 270, rTileY = -Gdx.graphics.getHeight()/2 + 30;
+
+
     private GuiCounter branchCounter;
     private static final int branchTileX = -Gdx.graphics.getWidth()/2 + 30, branchTileY = -Gdx.graphics.getHeight()/2 + 20;
 
@@ -43,6 +50,10 @@ public class GUI {
         grabTile = new GrabTile(new Texture("art/sprites/pickup.png"), grabTileX, grabTileY,cb);
         torchTile = new TorchTile(new Texture("art/sprites/LightTorch.png"),torchTileX,torchTileY,cb);
         fireTile = new FireTile(new Texture("art/sprites/StartFire.png"),fireTileX,fireTileY,cb);
+        lTile = new TurnLTile(new Texture("art/sprites/WorldTurnR.png"),lTileX,lTileY,cb);
+        rTile = new TurnRTile(new Texture("art/sprites/WorldTurnL.png"),rTileX,rTileY,cb);
+
+
         branchCounter = new GuiCounter(new Texture("art/sprites/LogHUD.png"),branchTileX,branchTileY,3,0);
         tinderCounter = new GuiCounter(new Texture("art/sprites/TinderboxHud.png"),tinderTileX,tinderTileY,3,3);
         torchUIElement = new FireUIElement(new Texture("art/sprites/TorchUIFull.png"),new Texture("art/sprites/TorchUIEmpty.png"));
@@ -51,8 +62,12 @@ public class GUI {
         tiles.add(grabTile);
         tiles.add(torchTile);
         tiles.add(fireTile);
+        tiles.add(lTile);
+        tiles.add(rTile);
+
         counters.add(branchCounter);
         counters.add(tinderCounter);
+        //activateTurnTiles();
     }
     public void update()
     {
@@ -127,5 +142,10 @@ public class GUI {
     public void updateThermoGUI(float hp)
     {
         thermometerGUI.updateHealth(hp);
+    }
+    public void activateTurnTiles()
+    {
+        lTile.setActive(true);
+        rTile.setActive(true);
     }
 }

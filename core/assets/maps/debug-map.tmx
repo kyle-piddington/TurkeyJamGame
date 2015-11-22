@@ -1009,7 +1009,7 @@
    <image width="100" height="100" source="../art/GameIcons/Black/2x/zoomOut.png"/>
   </tile>
  </tileset>
- <tileset firstgid="336" name="GameObjects" tilewidth="128" tileheight="64" tilecount="4">
+ <tileset firstgid="336" name="GameObjects" tilewidth="128" tileheight="84" tilecount="7">
   <tile id="0">
    <image width="32" height="32" source="../art/sprites/Stick.png"/>
   </tile>
@@ -1022,20 +1022,29 @@
   <tile id="3">
    <image width="64" height="64" source="../art/sprites/map.png"/>
   </tile>
+  <tile id="4">
+   <image width="46" height="60" source="../art/sprites/sans_sprite.png"/>
+  </tile>
+  <tile id="5">
+   <image width="50" height="84" source="../art/sprites/Papyrus_sprite.png"/>
+  </tile>
+  <tile id="6">
+   <image width="32" height="49" source="../art/sprites/Frisk_Sprite.png"/>
+  </tile>
  </tileset>
  <layer name="Background" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJzt1rENwCAQBMHPsQugCJv+u/MnSDSA/BITTH7RaXtEdAAAAAAAoqUr3QW2/OFJbxoFtgDn8cE+GACqmX2yOqlVZp+stAoAAAAAAADs9wEzBpBw
+   eJzt1rENgEAMBEHnQAFfBFAJ/beDk5e+AYQlTzD5RacdETEAKOspsAEAAAC62NKejgJb/nCmK90FtgD9+GAfDADVzD5ZdWqV2ScrrQIAAAAAAADfewENmpCk
   </data>
  </layer>
  <layer name="Trees" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJztlguKwzAMRH3/c5Wea2EhYIw+MyM53XQtECT+SPNkOe17jPE+fvz48eO//hqcvRzP5u/2J/Iz+b6FfxgxvoUfibM+o/m+kT/qjZ38zN2s9v9aA2+PVau7+cew9UTG1NLbY82xdfgUv1qDKA4bm+X3Ylsaon5HNVbZI73XOHv+Ho/Cb2mL2JFxJM88pvS/lZvhR2pgMSL1QeLMz5X7b+XO3ju/E+q6eX0Xv6cl0oaY8o1g6lXlR/Upcyg32gtd/FkelDHizPZY80wNrneVH2XwjOWP6oHWwBrr+v2bx738SD8oPaTUfSc/qhEd8/IhPZPVYPf9Z851V03WHPO7+v1fLdKr9qrKhNyby6r8Cid6JzLtCGOmq5s/08zwoz3jxX8iP7LfY93NP8dn+VE9Udxsv2U7+VnGyKIYKA9qVf5ICzKX6Vr3RzHvPH+vBigXonnlt2Iwsbv4LU2IDkSDakjcLCfDv8ZD9DC6WUP2ZvVh7793L7183ljFKt+WCv/MY8W2clnrPV2obsazfB3fP68nGP7IutgtU/7/ZbpWLlSr96zUwNo3jPEK/2oZF9qbke4sH3s+Kj/LWj27zr0KP2poXuY+ILyohjv5FW1qL6mx1e+/2pvI+Xmm8kexOvhRnRkDWqfqnnnsLv6sNpXez7i92tzFr1ilFpa+nfwIY9dZKj21g59hrfAjfafsvfwv8Wfr1vhMPk+j8v+PrXMX/7qmwn9ZJ3921xA9qyH80b4x7LXs+TMaUc27zj+7L5/iR/R2xUJ78S5+VW93rB38T7NPnH+2Bt2L5Izmn86P1CCbm+efyJ/VIMun8Kv6d/FX47L8x48fP/4f/AdfRRpc
+   eJztlguKwzAMRH3/c5Wea2EhYIw+MyM53XQtECT+SPNkOe17jPE+fvz48eO//hqcvRzP5lFHciH+RH4m37fwDyPGt/AjcdZnNN838ke9sZOfuZvV/l9r4O2xanU3/xi2nsiYWnp7rDm2Dp/iV2sQxWFjs/xebEtD1O+oxip7pPcaZ8/f41H4LW0ROzKO5JnHlP63cjP8SA0sRqQ+SJz5uXL/rdzZe+d3Ql03r+/i97RE2hBTvhFMvar8qD5lDuVGe6GLP8uDMkac2R5rnqnB9a7yowyesfxRPdAaWGNdv3/zuJcf6Qelh5S67+RHNaJjXj6kZ7Ia7L7/zLnuqsmaY35Xv/+rRXrVXlWZkHtzWZVf4UTvRKYdYcx0dfNnmhl+tGe8+E/kR/Z7rLv55/gsP6onipvtt2wnP8sYWRQD5UGtyh9pQeYyXev+KOad5+/VAOVCNK/8Vgwmdhe/pQnRgWhQDYmb5WT413iIHkY3a8jerD7s/ffupZfPG6tY5dtS4Z95rNhWLmu9pwvVzXiWr+P75/UEwx9ZF7tlyv+/TNfKhWr1npUaWPuGMV7hXy3jQnsz0p3lY89H5WdZq2fXuVfhRw3Ny9wHhBfVcCe/ok3tJTW2+v1XexM5P89U/ihWBz+qM2NA61TdM4/dxZ/VptL7GbdXm7v4FavUwtK3kx9h7DpLpad28DOsFX6k75S9l/8l/mzdGp/J52lU/v+xde7iX9dU+C/r5M/uGqJnNYQ/2jeGvZY9f0YjqnnX+Wf35VP8iN6uWGgv3sWv6u2OtYP/afaJ88/WoHuRnNH80/mRGmRz8/wT+bMaZPkUflX/Lv5qXJb/+PHjx/+D/wBVSxgQ
   </data>
  </layer>
  <layer name="Rocks" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJzt2lsKgCAQBVD3v1DXEdFXkhCk5TTnQNSXzZRdepUCAGf16wLKUUO7ZNL2+1b/d/czu57s5x/IYVa2RcvMaPUCZCCbgZ0sAL7gXSAQWe1sPxlnNb7b0FObNURhzkI+o+7ZAJhHPuc14tky83+nV/2OOpari1DjTPpn9PUfUeb8B+DfNvDHMIU=
+   eJzt2ksKgCAUBVD3v1DXEQ0rgyBNX+8ciBrVNerSx1IA4KjODlCuGVbI9KVZ4396nNF5amMB+JtR3RatM6PlBchANwM7XQDM4FsgEFm92X6zn9X4b8OdelpDFK5ZyKfXMxsA4+jnvHq8W2aed9oab69zuboIGUcyfnrf/xFl7n8A/m0DWJEt0w==
   </data>
  </layer>
  <objectgroup name="Sticks">
@@ -1046,29 +1055,21 @@
   <object id="25" gid="336" x="463" y="3460" width="32" height="32"/>
   <object id="26" gid="336" x="663" y="3456" width="32" height="32"/>
   <object id="27" gid="336" x="551" y="3618" width="32" height="32"/>
-  <object id="28" gid="336" x="872" y="2868" width="32" height="32"/>
-  <object id="29" gid="336" x="923" y="2884" width="32" height="32"/>
   <object id="30" gid="336" x="1676" y="2497" width="32" height="32"/>
   <object id="31" gid="336" x="3357" y="2315" width="32" height="32"/>
-  <object id="32" gid="336" x="528" y="3155" width="32" height="32"/>
   <object id="33" gid="336" x="1418" y="1687" width="32" height="32"/>
   <object id="35" gid="336" x="1375" y="1704" width="32" height="32"/>
   <object id="36" gid="336" x="1358" y="2845" width="32" height="32"/>
   <object id="37" gid="336" x="3107" y="3102" width="32" height="32"/>
   <object id="38" gid="336" x="3141" y="2845" width="32" height="32"/>
   <object id="40" gid="196" x="3778" y="764" width="64" height="64"/>
-  <object id="47" gid="336" x="341" y="2144" width="32" height="32"/>
-  <object id="48" gid="336" x="903" y="2256" width="32" height="32"/>
-  <object id="49" gid="336" x="449" y="1880" width="32" height="32"/>
   <object id="50" gid="336" x="1400" y="3438" width="32" height="32"/>
   <object id="51" gid="336" x="2258" y="3718" width="32" height="32"/>
   <object id="52" gid="336" x="3664" y="2969" width="32" height="32"/>
   <object id="53" gid="336" x="3275" y="914" width="32" height="32"/>
   <object id="54" gid="336" x="2785" y="700" width="32" height="32"/>
   <object id="55" gid="336" x="1304" y="820" width="32" height="32"/>
-  <object id="56" gid="336" x="468" y="901" width="32" height="32"/>
   <object id="57" gid="336" x="1524" y="1384" width="32" height="32"/>
-  <object id="58" gid="336" x="326" y="2662" width="32" height="32"/>
   <object id="59" gid="336" x="1292" y="3724" width="32" height="32"/>
   <object id="60" gid="336" x="2131" y="3233" width="32" height="32"/>
   <object id="61" gid="336" x="2757" y="3025" width="32" height="32"/>
@@ -1083,8 +1084,6 @@
   <object id="70" gid="336" x="1551" y="363" width="32" height="32"/>
   <object id="71" gid="336" x="1852" y="549" width="32" height="32"/>
   <object id="72" gid="336" x="1291" y="1290" width="32" height="32"/>
-  <object id="73" gid="336" x="761" y="1084" width="32" height="32"/>
-  <object id="74" gid="336" x="790" y="785" width="32" height="32"/>
   <object id="75" gid="336" x="610" y="389" width="32" height="32"/>
   <object id="76" gid="336" x="548" y="442" width="32" height="32"/>
   <object id="77" gid="336" x="630" y="454" width="32" height="32"/>
@@ -1092,7 +1091,10 @@
   <object id="82" gid="336" x="2452" y="2791" width="32" height="32"/>
   <object id="83" gid="336" x="1155" y="2655" width="32" height="32"/>
   <object id="84" gid="336" x="1230" y="2372" width="32" height="32"/>
-  <object id="85" gid="336" x="975" y="1734" width="32" height="32"/>
-  <object id="86" gid="336" x="631" y="1541" width="32" height="32"/>
  </objectgroup>
+ <layer name="Decals" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJzt2kENgEAQBME9YzjgB/xIkANqsMi6mAupSvo/AqYKYF53t3ZPekjI2b3dFd5Bxjaqjm4f6SUAAAAAAAAAAAAAAPNafK4BAPiRD9o5BAw=
+  </data>
+ </layer>
 </map>

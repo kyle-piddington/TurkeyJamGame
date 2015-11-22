@@ -13,7 +13,7 @@ import com.mygdx.game.TweenWrappers.SpriteAccessor;
  * Created by kpidding on 11/22/15.
  */
 public abstract class ActionTile {
-    private Sprite actionSprite;
+    protected Sprite actionSprite;
     TextureRegion active;
     TextureRegion inactive;
     public boolean isHovered;

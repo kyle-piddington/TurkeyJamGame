@@ -22,7 +22,7 @@ public class FireUIElement {
     Sprite fullSprite,emptySprite;
     public FireUIElement()
     {
-        this(new Texture("art/sprites/FireFull.png"),new Texture("art/sprites/FireGrey.png"));
+        this(new Texture("art/sprites/FireFull.png"),new Texture("art/sprites/FireGrey.png")); percent = 1.0f;
     }
     public FireUIElement(Texture fullTexture, Texture emptyTexture)
     {

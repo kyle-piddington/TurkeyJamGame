@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenEquations;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -82,7 +83,73 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
                 }
                 world.addGameObject(new Fire(player.getX(),player.getY()));
                 break;
-            default:
+            case MAPL:
+                CameraDirection nextDirection = camDir;
+                float nextAngle = 0;
+                switch(camDir)
+                {
+                    case NORTH:
+                        nextDirection = CameraDirection.WEST;
+                        nextAngle = 270;
+                        break;
+                    case WEST:
+                        nextDirection = CameraDirection.SOUTH;
+                        nextAngle = 180;
+                        break;
+                    case SOUTH:
+                        nextDirection = CameraDirection.EAST;
+                        nextAngle = 90;
+                        break;
+                    case EAST:
+                        nextDirection = CameraDirection.NORTH;
+                        nextAngle = 0;
+                        break;
+
+
+                }
+                camDir = nextDirection;
+                if(camera.getRotation() == 0)
+                {
+                    camera.setRotation(360);
+                }
+                Tween.to(camera,CameraAccessor.ROT,0.25f)
+                        .target(nextAngle)
+                        .ease(TweenEquations.easeOutCubic)
+                        .start(World.manager);
+                break;
+            case MAPR:
+                CameraDirection nextRDirection = camDir;
+                float nextRAngle = 0;
+                switch(camDir)
+                {
+                    case NORTH:
+                        nextRDirection = CameraDirection.EAST;
+                        nextRAngle = 90;
+                        break;
+                    case EAST:
+                        nextRDirection = CameraDirection.SOUTH;
+                        nextRAngle = 180;
+                        break;
+                    case SOUTH:
+                        nextRDirection = CameraDirection.WEST;
+                        nextRAngle = 270;
+                        break;
+                    case WEST:
+                        nextRDirection = CameraDirection.NORTH;
+                        nextRAngle = 0;
+                        break;
+
+
+                }
+                camDir = nextRDirection;
+                if(camera.getRotation() == 270)
+                {
+                    camera.setRotation(-90);
+                }
+                Tween.to(camera,CameraAccessor.ROT,0.25f)
+                        .target(nextRAngle)
+                        .ease(TweenEquations.easeOutCubic)
+                        .start(World.manager);
                 //Do nothing
 
         }
@@ -100,7 +167,9 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
     @Override
 	public void create () {
         Tween.registerAccessor(Sprite.class,new SpriteAccessor());
-		spriteBatch = new SpriteBatch();
+        Tween.registerAccessor(GameCamera.class,new CameraAccessor());
+
+        spriteBatch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
@@ -207,6 +276,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 				} else {
 					blizMask.setIntensity(0.5f);
 					blizzardtimer = rand.nextFloat() * BLIZZARD_RANGE + BLIZZARD_MIN;
+                    blizzardCalmed = false;
 				}
 
 
@@ -217,7 +287,11 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 			player.overMap(target);
 
 			if(player.foundMap())
-				world.removeGameObject(target);
+            {
+                gameGui.activateTurnTiles();
+                world.removeGameObject(target);
+
+            }
 
 		}
 		else if(!player.getLifeStatus())
@@ -348,7 +422,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
         directions.add( CameraDirection.EAST);
         directions.add(CameraDirection.WEST);
         directions.remove(camDir);
-        int rnd =  rand.nextInt(7);
+        int rnd =  rand.nextInt(6);
         if(rnd < 2)
         {
             camDir = directions.get(0);
