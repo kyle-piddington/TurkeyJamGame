@@ -18,6 +18,7 @@ abstract public class GameObject extends SpriteRenderable implements Renderable,
     {
         super(sprite);
         dropShadow = new Sprite(new Texture("art/sprites/dropShadow.png"));
+        dropShadow.setOrigin(dropShadow.getWidth()/2.f,dropShadow.getHeight()/2.f);
     }
     protected void disableShadow() {
         renderShadow = false;
@@ -25,10 +26,10 @@ abstract public class GameObject extends SpriteRenderable implements Renderable,
     public void render(SpriteBatch sb)
     {
 
-
-        super.render(sb);
         if(renderShadow)
             dropShadow.draw(sb);
+        super.render(sb);
+
         //Render a drop shadow
 
     }
@@ -38,9 +39,23 @@ abstract public class GameObject extends SpriteRenderable implements Renderable,
         //Default Gameobjects contain no update
     }
 
+    public void setRotation(float r)
+    {
+        super.setRotation(r);
+        dropShadow.setRotation(r);
+    }
+
     protected void updateShadow()
     {
-        dropShadow.setPosition(this.getX(),this.getY() - sprite.getHeight()/3);
+
+        dropShadow.setPosition(sprite.getX(),sprite.getY() - sprite.getHeight()/2);
+
+    }
+
+    protected void updateShadow(float xOff, float yOff)
+    {
+
+        dropShadow.setPosition(sprite.getX() + xOff,sprite.getY() + yOff);
 
     }
 

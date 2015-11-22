@@ -13,7 +13,14 @@ public class GameCamera extends OrthographicCamera {
         rotation += angle;
         super.rotate(angle);
     }
+    public void setRotation(float angle)
+    {
 
+        super.rotate(-rotation);
+        rotation = angle;
+        super.rotate(angle);
+
+    }
     public float getRotation()
     {
         return rotation;

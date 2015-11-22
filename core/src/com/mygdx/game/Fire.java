@@ -17,7 +17,7 @@ public class Fire extends GameObject {
     private static final int NUM_FRAMES = 4;
     int numFrames;
     int currFrame = 0;
-    float fireLife = 60*3; //3 minutes of life by default
+    float fireLife = 10; //3 minutes of life by default
     float t;
     boolean out = false;
     Animation fireAnimation;

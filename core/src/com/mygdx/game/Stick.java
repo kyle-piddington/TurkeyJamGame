@@ -9,12 +9,7 @@ public class Stick extends GameObject{
     public Stick(Sprite sprite)
     {
         super(sprite);
-        updateShadow();
+        updateShadow(0,0);
     }
-    float t;
-    @Override
-    public void update(float dt) {
-        t += dt;
-        super.getSprite().setY(super.getSprite().getY() + 0.1f*(float)Math.cos(t));
-    }
+
 }

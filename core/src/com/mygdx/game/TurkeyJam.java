@@ -8,6 +8,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,11 +17,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.TweenWrappers.SpriteAccessor;
 import com.mygdx.game.test.TestGameObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	//SpriteBatch batch;
@@ -33,13 +37,25 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	Sound windAmbient;
 	Sound fireAmbient;
 	Music fireMusic;
-
+    BlizzardMask blizMask;
 	float mapHeight, mapWidth;
-
+    float blizzardtimer = 10.0f;
 	long windID, fireID;
-
+    Random rand = new Random();
 	boolean moveLeft,moveRight,moveUp,moveDown;
+    private CameraDirection camDir = CameraDirection.NORTH;
 
+
+    private boolean blizzardCalmed = false;
+    private  static final float BLIZZARD_MIN =  20.f;
+    private static final float BLIZZARD_RANGE = 60.f;
+    enum CameraDirection
+    {
+        NORTH,
+        EAST,
+        SOUTH,
+        WEST
+    }
 
 
     @Override
@@ -78,24 +94,54 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		fireMusic.setVolume(0f);
 
 		Gdx.input.setInputProcessor(this);
+        blizMask = new BlizzardMask();
 	}
 
 
 	@Override
 	public void render (){
+
 		camera.position.x = player.getSprite().getX() + player.getSprite().getOriginX();
 		camera.position.y = player.getSprite().getY() + player.getSprite().getOriginY();
 		camera.update();
+        //camera.rotate(0.25f);
 		world.update(camera, Gdx.graphics.getDeltaTime());
 
 
         Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //Blizzard
+        blizMask.update(Gdx.graphics.getDeltaTime());
+        world.render(camera, spriteBatch);
+        spriteBatch.setProjectionMatrix(new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight()).combined);
+        spriteBatch.begin();
+        blizMask.draw(spriteBatch,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        spriteBatch.end();
 
-        world.render(camera,spriteBatch);
-		movePlayer();
+        blizzardtimer -= Gdx.graphics.getDeltaTime();
+        if(blizzardtimer <= 0)
+        {
+           if(blizzardtimer > -3)
+           {
+              blizMask.setIntensity(1.0f);
+           }
+           else if(!blizzardCalmed)
+           {
+               setRandCamDir();
+               blizzardCalmed = true;
+
+           }
+           else
+           {
+               blizMask.setIntensity(0.5f);
+               blizzardtimer = rand.nextFloat() * BLIZZARD_RANGE + BLIZZARD_MIN;
+           }
+
+        }
+        movePlayer();
 		healPlayer();
+
     }
 
 	@Override
@@ -125,12 +171,15 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 					if (player.pickUpStick(stick))
 						world.removeGameObject(stick);
 				}
+                break;
 			case Input.Keys.NUM_1:
-				//tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
-				break;
+				world.addGameObject(new Fire(player.getX(),player.getY()));
+                break;
 			case Input.Keys.NUM_2:
 				//tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
 				break;
+            case Input.Keys.NUM_3:
+                setRandCamDir();
 		}
 		return false;
 	}
@@ -168,6 +217,30 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		return false;
 	}
 
+    void setRandCamDir()
+    {
+       
+        switch (rand.nextInt(4))
+        {
+            case 0:
+                camera.setRotation(0f);
+                camDir = CameraDirection.NORTH;
+                break;
+            case 1:
+                camera.setRotation(90f);
+                camDir = CameraDirection.EAST;
+                break;
+            case 2:
+                camera.setRotation(180f);
+                camDir = CameraDirection.SOUTH;
+                break;
+            case 4:
+                camera.setRotation(270f);
+                camDir = CameraDirection.WEST;
+                break;
+        }
+    }
+
 	public void movePlayer()
 	{
 		player.freezeSlowdown();
@@ -188,11 +261,32 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
         {
             vel.y = -32.f;
         }
-        vel.nor();
-        world.checkCollision(player,vel);
-        vel.nor();
-        player.move(vel.x * player.getSpeed(),vel.y * player.getSpeed(),mapWidth-player.getSprite().getWidth(),mapHeight-player.getSprite().getHeight());
+        Vector2 directionalVel = new Vector2();
 
+        switch (camDir)
+        {
+            case NORTH:
+                directionalVel.x = vel.x;
+                directionalVel.y = vel.y;
+                break;
+            case EAST:
+                directionalVel.x = vel.y;
+                directionalVel.y = -vel.x;
+                break;
+            case SOUTH:
+                directionalVel.x = -vel.x;
+                directionalVel.y = -vel.y;
+                break;
+            case WEST:
+                directionalVel.x = -vel.y;
+                directionalVel.y = vel.x;
+                break;
+        }
+        directionalVel.nor();
+        world.checkCollision(player,directionalVel);
+        directionalVel.nor();
+        player.move(directionalVel.x * player.getSpeed(),directionalVel.y * player.getSpeed(),mapWidth-player.getSprite().getWidth(),mapHeight-player.getSprite().getHeight());
+        player.moveAnim(vel.x,vel.y);
 	}
 
 	public void healPlayer()
@@ -206,11 +300,15 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 			//fireAmbient.stop();
 		}
 		else {
-			float tempX = (player.getX() - world.getFire().get(0).getX());
-			float tempY = (player.getY() - world.getFire().get(0).getY());
+            world.sortFire(player.getX(),player.getY());
+            Fire nearestFire = world.getFire().get(0);
+			float tempX = (player.getX() - nearestFire.getX());
+			float tempY = (player.getY() - nearestFire.getY());
 
 			distance = (float) Math.sqrt((tempX * tempX) + (tempY * tempY));
-		}
+		    if(nearestFire.isExtinguished())
+                distance = 100000;
+        }
 		player.fireWarm(distance);
 
 		volume = (distance <= 500f) ? 1f - (distance % 500f)*0.001f : 0f;

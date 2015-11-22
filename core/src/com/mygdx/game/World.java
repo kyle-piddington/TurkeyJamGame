@@ -108,7 +108,7 @@ public class World {
     private List<Stick> stickList;
     private List<Fire> fires;
     private List<GameObject> removeObjects;
-    TiledMapTileLayer trees;
+    TiledMapTileLayer trees, rocks;
     float tileSize;
     public World(TiledMap map)
     {
@@ -124,8 +124,11 @@ public class World {
 
         //Set up trees
         trees = (TiledMapTileLayer)map.getLayers().get("Trees");
+        rocks = (TiledMapTileLayer)map.getLayers().get("Rocks");
+        rocks.setVisible(false);
         trees.setVisible(false);
         Texture treeTexture = new Texture("art/sprites/summer_pine_tree_tiles.png");
+        Texture rockTexture = new Texture("art/sprites/PNG/16px/boulder.png");
         tileSize = trees.getTileWidth();
         for(int tx = 0; tx < trees.getWidth(); tx++)
         {
@@ -140,6 +143,23 @@ public class World {
                     treeRenderable.getSprite().setOrigin(31/2,8);
 
                     billboardedRenderables.add(treeRenderable);
+                }
+            }
+        }
+        for(int tx = 0; tx < rocks.getWidth(); tx++)
+        {
+            for(int ty = 0; ty < rocks.getHeight(); ty++)
+            {
+                if(rocks.getCell(tx,ty) != null)
+                {
+                    SpriteRenderable rockRenderable = new SpriteRenderable(new Sprite(rockTexture));
+
+                    rockRenderable.setPosition(tx * trees.getTileWidth(),
+                            ty * trees.getTileHeight());
+                    rockRenderable.getSprite().setScale(1.0f);
+                    rockRenderable.getSprite().setOrigin(rockTexture.getWidth()/2,rockTexture.getHeight()/2);
+
+                    billboardedRenderables.add(rockRenderable);
                 }
             }
         }
@@ -179,6 +199,7 @@ public class World {
         //Render outside bounds for rotation
         float width = camera.viewportWidth * camera.zoom * 2;
         float height = camera.viewportHeight * camera.zoom * 2;
+
         renderer.setView(
                 camera.combined,
                 camera.position.x - width / 2, camera.position.y - height / 2
@@ -215,6 +236,7 @@ public class World {
         }
         BillboardComarator cmp = new BillboardComarator(camera.view);
         Collections.sort(billboardedRenderables,cmp);
+
         World.manager.update(dt);
         removeGameObjects(); //Clear any removal lists
     }
@@ -283,16 +305,16 @@ public class World {
         float h = player.getSprite().getHeight() *  getSign(direction.y);
 
         int cellInitialX = (int)(Math.round(player.getSprite().getX()/tileSize));
-        int cellInitialY = (int)(Math.round(player.getSprite().getY()/tileSize));
+        int cellInitialY = (int)(Math.round(player.getSprite().getY() / tileSize));
 
         int cellFinalX = (int)Math.round((player.getSprite().getX() + direction.x + w/2)/tileSize);
-        int cellFinalY = (int)Math.round((player.getSprite().getY() + direction.y + h/2)/tileSize);
+        int cellFinalY = (int)Math.round((player.getSprite().getY() + direction.y + h / 2) / tileSize);
 
-        if(trees.getCell(cellFinalX,cellInitialY)!=null)
+        if(trees.getCell(cellFinalX,cellInitialY)!=null || rocks.getCell(cellFinalX,cellInitialY) != null)
         {
             direction.x = 0;
         }
-        if(trees.getCell(cellInitialX,cellFinalY) !=null)
+        if(trees.getCell(cellInitialX,cellFinalY) !=null || rocks.getCell(cellInitialX,cellFinalY) != null)
         {
             direction.y = 0;
         }
@@ -303,6 +325,10 @@ public class World {
         //Move offset based off of sign of movePosition
     }
 
+    void sortFire(float playerX, float playerY)
+    {
+        Collections.sort(fires,new FireComarator(playerX,playerY));
+    }
 
 
 }

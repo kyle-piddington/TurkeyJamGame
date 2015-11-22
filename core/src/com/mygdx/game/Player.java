@@ -62,9 +62,11 @@ public class Player extends GameObject{
         playerRightAnimation = new Animation(0.2f,rightTex);
 
         super.setSprite(new Sprite(playerUpAnimation.getKeyFrame(0.0f)));
+        super.getSprite().setOrigin(sprite.getWidth()/2.0f,0.0f);
         super.getSprite().setScale(1.5f);
         speed = MAX_SPEED;
         heat = MAX_HEAT;
+
         //setPosition(position[0], position[1]);
 
     }
@@ -88,9 +90,8 @@ public class Player extends GameObject{
         updateShadow();
     }
 
-    public void move(float x, float y, float xBound, float yBound)
-    {
-        moving = true;
+    public void moveAnim(float x, float y)
+    {moving = true;
         if(x < 0)
         {
             direction = Direction.LEFT;
@@ -111,6 +112,10 @@ public class Player extends GameObject{
         {
             moving = false;
         }
+    }
+    public void move(float x, float y, float xBound, float yBound)
+    {
+
 
 
         if(position[0] > 0)
