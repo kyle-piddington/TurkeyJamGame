@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.TweenWrappers.GUIJournal;
 import com.mygdx.game.TweenWrappers.ThermometerGUI;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class GUI {
     private ThermometerGUI thermometerGUI;
     private static final int thermoUIX = -Gdx.graphics.getWidth()/2 + 10, thermoUIY = -Gdx.graphics.getHeight() /2 + 40;
 
+    GUIJournal journal;
     List<ActionTile> tiles;
     List<GuiCounter> counters;
     public GUI(ActionCallback cb)
@@ -59,6 +61,7 @@ public class GUI {
         torchUIElement = new FireUIElement(new Texture("art/sprites/TorchUIFull.png"),new Texture("art/sprites/TorchUIEmpty.png"));
         torchUIElement.move(torchUIX,torchUIY);
         thermometerGUI = new ThermometerGUI(thermoUIX,thermoUIY);
+        journal = new GUIJournal(0,0);
         tiles.add(grabTile);
         tiles.add(torchTile);
         tiles.add(fireTile);
@@ -116,6 +119,7 @@ public class GUI {
         fireTile.setActive(active);
     }
     public void draw(SpriteBatch spriteBatch) {
+        journal.draw(spriteBatch);
         for(ActionTile t : tiles)
         {
             t.draw(spriteBatch);
@@ -126,6 +130,7 @@ public class GUI {
         }
         torchUIElement.draw(spriteBatch);
         thermometerGUI.draw(spriteBatch);
+
     }
     public void updateBranchCount(int newAmnt)
     {
@@ -143,6 +148,7 @@ public class GUI {
     {
         thermometerGUI.updateHealth(hp);
     }
+    public void closeJournal(){journal.close();}
     public void activateTurnTiles()
     {
         lTile.setActive(true);

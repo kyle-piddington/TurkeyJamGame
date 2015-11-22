@@ -12,7 +12,7 @@ import java.util.Random;
 public class Torch {
     static Random rand = new Random();
     public Sprite torchSprite = new Sprite(new Texture("art/sprites/TorchGlow.png"));
-    float t = 90; //Minute and a half per torch
+    float t = 45; //Minute and a half per torch
     public Torch(float t)
     {
         this.t = t;
@@ -20,7 +20,7 @@ public class Torch {
     }
     public Torch()
     {
-        this.t = 90;
+        this.t = 45;
         torchSprite.setOrigin(torchSprite.getWidth()/2.f,torchSprite.getHeight()/2.f);
     }
     public boolean isLit()
@@ -29,7 +29,7 @@ public class Torch {
     }
     public float getLitPercent()
     {
-        return Math.max(0,t) / 90.f;
+        return Math.max(0,t) / 45.f;
     }
     public void update(float dt)
     {

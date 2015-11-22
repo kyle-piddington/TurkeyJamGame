@@ -38,9 +38,9 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
     BlizzardMask blizMask;
 	GoalMap target;
 	float mapHeight, mapWidth;
-    float blizzardtimer = 10.0f;
+    float blizzardtimer = 30.0f;
 	long windID, fireID;
-    Random rand = new Random();
+    Random rand = new Random(System.currentTimeMillis());
 	boolean moveLeft,moveRight,moveUp,moveDown;
     private CameraDirection camDir = CameraDirection.NORTH;
     private FireUIElement fireUI;
@@ -52,7 +52,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 
     private boolean blizzardCalmed = false;
     private  static final float BLIZZARD_MIN =  20.f;
-    private static final float BLIZZARD_RANGE = 60.f;
+    private static final float BLIZZARD_RANGE = 30.f;
 
     @Override
     public void send(ActionTile.ACTIONS action) {
@@ -403,11 +403,13 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 				break;
 			case Input.Keys.SPACE:
                 break;
+            case Input.Keys.ENTER:
+                gameGui.closeJournal();
 			case Input.Keys.NUM_1:
 				//tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
 				break;
 			case Input.Keys.NUM_2:
-				player.lightTorch();
+				//player.lightTorch();
 				break;
 		}
 

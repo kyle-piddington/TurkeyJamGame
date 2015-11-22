@@ -19,7 +19,7 @@ public class Fire extends GameObject {
     public static float FireDist = 64.f;
     int numFrames;
     int currFrame = 0;
-    float fireLife = 60*3; //3 minutes of life by default
+    float fireLife = 60*1.5f; //3 minutes of life by default
     float t;
     boolean out = false;
     Animation fireAnimation;
@@ -80,6 +80,6 @@ public class Fire extends GameObject {
     }
 
     public float firePercent() {
-        return fireLife / (60*3.f);
+        return fireLife / (60*1.5f);
     }
 }

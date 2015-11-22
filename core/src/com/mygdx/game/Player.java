@@ -342,7 +342,7 @@ public class Player extends GameObject{
     {
         if(sticks > 0)
         {
-            if(torch.isLit() || lastFireDist < Fire.FireDist)
+            if(lastFireDist < Fire.FireDist)
             {
 
                 torch = new Torch();
