@@ -31,15 +31,15 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 	//Stick testStick;
 	Sound windAmbient;
 	Sound fireAmbient;
-	Music fastSteps;
-	Music medSteps;
-	Music slowSteps;
+	Sound fastSteps;
+	Sound medSteps;
+	Sound slowSteps;
 	Music fireMusic;
     BlizzardMask blizMask;
 	GoalMap target;
 	float mapHeight, mapWidth;
     float blizzardtimer = 30.0f;
-	long windID, fireID;
+	long windID, fireID, fastID, medID, slowID;
     Random rand = new Random(System.currentTimeMillis());
 	boolean moveLeft,moveRight,moveUp,moveDown;
     private CameraDirection camDir = CameraDirection.NORTH;
@@ -199,9 +199,9 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 		fireAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/fire_sound.wav"));
 		windAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/wind_sound.wav"));
 
-		fastSteps = Gdx.audio.newMusic(Gdx.files.internal("sound/footsteps_fast.wav"));
-		medSteps = Gdx.audio.newMusic(Gdx.files.internal("sound/footsteps_med.wav"));
-		slowSteps = Gdx.audio.newMusic(Gdx.files.internal("sound/footsteps_slow.wav"));
+		fastSteps = Gdx.audio.newSound(Gdx.files.internal("sound/footsteps_fast.wav"));
+		medSteps = Gdx.audio.newSound(Gdx.files.internal("sound/footsteps_med.wav"));
+		slowSteps = Gdx.audio.newSound(Gdx.files.internal("sound/footsteps_slow.wav"));
 
 		windID = windAmbient.loop(0.2f);
 		fireID = fireAmbient.loop(0f);
@@ -210,17 +210,25 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 		fireMusic.setLooping(true);
 		fireMusic.setVolume(0f);
 
-		fastSteps.play();
-		fastSteps.setLooping(true);
-		fastSteps.setVolume(0f);
+        fastID = fastSteps.play(1f);
+        fastSteps.pause();
+        fastSteps.setLooping(fastID, true);
 
-		medSteps.play();
-		medSteps.setLooping(true);
-		medSteps.setVolume(0f);
+        medID = medSteps.play(1f);
+        medSteps.pause();
+        medSteps.setLooping(medID, true);
 
-		slowSteps.play();
-		slowSteps.setLooping(true);
-		slowSteps.setVolume(0f);
+        slowID = slowSteps.play(1f);
+        slowSteps.pause();
+        slowSteps.setLooping(slowID, true);
+        /*
+		fastSteps.setVolume(1f);
+        fastSteps.setLooping(true);
+		medSteps.setVolume(1f);
+        medSteps.setLooping(true);
+		slowSteps.setVolume(1f);
+        slowSteps.setLooping(true);
+        */
 
         fireUI = new FireUIElement();
 		Gdx.input.setInputProcessor(this);
@@ -502,11 +510,11 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 		if(!moveLeft && !moveRight && !moveUp && !moveDown)
 		{
 			switch (currSpeed) {
-				case 1: fastSteps.setVolume(0f);
+				case 1: fastSteps.pause();
 					break;
-				case 2: medSteps.setVolume(0f);
+				case 2: medSteps.pause();
 					break;
-				case 3: slowSteps.setVolume(0f);
+				case 3: slowSteps.pause();
 					break;
 			}
 		}
@@ -585,24 +593,21 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 
 		if(heatLevel >= 65f) {
 
-			if(fastSteps.getVolume() == 0f)
-				fastSteps.setVolume(1f);
-			medSteps.setVolume(0f);
+            medSteps.pause();
+			fastSteps.resume();
 			currSpeed = 1;
 		}
 		else if(heatLevel >= 30f) {
 
-			if(medSteps.getVolume() == 0f)
-				medSteps.setVolume(1f);
-			fastSteps.setVolume(0f);
-			slowSteps.setVolume(0f);
+            fastSteps.pause();
+            slowSteps.pause();
+			medSteps.resume();
 			currSpeed = 2;
 		}
 		else {
 
-			if(slowSteps.getVolume() == 0f)
-				slowSteps.setVolume(1f);
-			medSteps.setVolume(0f);
+            medSteps.pause();
+			slowSteps.resume();
 			currSpeed = 3;
 		}
 
