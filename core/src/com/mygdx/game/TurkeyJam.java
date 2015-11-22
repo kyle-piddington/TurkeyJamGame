@@ -19,6 +19,7 @@ import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.TweenWrappers.SpriteAccessor;
 import com.mygdx.game.test.TestGameObject;
 
@@ -132,9 +133,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 			//Draw UI
 			spriteBatch.setProjectionMatrix(camera.combined);
 			spriteBatch.begin();
-			fireUI.move(player.getX(), player.getY());
 			fireUI.draw(spriteBatch);
-			fireUI.updatePercent(0.0f);
 			spriteBatch.end();
 
 			spriteBatch.setProjectionMatrix(new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()).combined);
@@ -155,6 +154,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 					blizMask.setIntensity(0.5f);
 					blizzardtimer = rand.nextFloat() * BLIZZARD_RANGE + BLIZZARD_MIN;
 				}
+
 
 			}
 			movePlayer();
@@ -274,6 +274,31 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
         }
     }
 
+    public Vector2 camVector(Vector2 dir)
+    {
+        Vector2 directionalVel = new Vector2();
+
+        switch (camDir)
+        {
+            case NORTH:
+                directionalVel.x = dir.x;
+                directionalVel.y = dir.y;
+                break;
+            case EAST:
+                directionalVel.x = dir.y;
+                directionalVel.y = -dir.x;
+                break;
+            case SOUTH:
+                directionalVel.x = -dir.x;
+                directionalVel.y = -dir.y;
+                break;
+            case WEST:
+                directionalVel.x = -dir.y;
+                directionalVel.y = dir.x;
+                break;
+        }
+        return directionalVel;
+    }
 	public void movePlayer()
 	{
 		player.freezeSlowdown();
@@ -294,27 +319,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
         {
             vel.y = -32.f;
         }
-        Vector2 directionalVel = new Vector2();
-
-        switch (camDir)
-        {
-            case NORTH:
-                directionalVel.x = vel.x;
-                directionalVel.y = vel.y;
-                break;
-            case EAST:
-                directionalVel.x = vel.y;
-                directionalVel.y = -vel.x;
-                break;
-            case SOUTH:
-                directionalVel.x = -vel.x;
-                directionalVel.y = -vel.y;
-                break;
-            case WEST:
-                directionalVel.x = -vel.y;
-                directionalVel.y = vel.x;
-                break;
-        }
+        Vector2 directionalVel = camVector(vel);
         directionalVel.nor();
         world.checkCollision(player,directionalVel);
         directionalVel.nor();
@@ -341,9 +346,15 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 			distance = (float) Math.sqrt((tempX * tempX) + (tempY * tempY));
 		    if(nearestFire.isExtinguished())
                 distance = 100000;
-            if(distance < 128)
+            if(distance < 64)
             {
 
+               fireUI.move(nearestFire.getX(),nearestFire.getY());
+               fireUI.updatePercent(nearestFire.firePercent());
+            }
+            else
+            {
+                fireUI.hide();
             }
         }
 		player.fireWarm(distance);
