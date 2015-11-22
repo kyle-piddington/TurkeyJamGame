@@ -33,12 +33,11 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	GameCamera camera;
 	SpriteBatch spriteBatch;
 	Player player;
-	Stick testStick;
+	//Stick testStick;
 	Sound windAmbient;
 	Sound fireAmbient;
 	Music fireMusic;
     BlizzardMask blizMask;
-	boolean gameOver;
 	GoalMap target;
 	float mapHeight, mapWidth;
     float blizzardtimer = 10.0f;
@@ -47,6 +46,10 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	boolean moveLeft,moveRight,moveUp,moveDown;
     private CameraDirection camDir = CameraDirection.NORTH;
     private FireUIElement fireUI;
+
+	SpriteBatch endGameBatch;
+	Sprite winGame;
+	Sprite loseGame;
 
     private boolean blizzardCalmed = false;
     private  static final float BLIZZARD_MIN =  20.f;
@@ -72,11 +75,11 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		mapHeight = temp.getHeight() * temp.getTileHeight();
 		mapWidth = temp.getWidth() * temp.getTileWidth();
 		player = new Player(new Texture("art/sprites/PlayerChar.png"));
-		player.setSpeed(0.75f);
-		testStick = new Stick(new Sprite(new Texture("art/sprites/Stick.png")));
+		//player.setSpeed(0.75f);
+		//testStick = new Stick(new Sprite(new Texture("art/sprites/Stick.png")));
 		target = new GoalMap(new Sprite(new Texture("art/sprites/map.png")));
         world.addGameObject(player);
-		world.addGameObject(testStick);
+		//world.addGameObject(testStick);
 		world.addGameObject(target);
 
 		camera = new GameCamera();
@@ -101,62 +104,76 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
         fireUI = new FireUIElement();
 		Gdx.input.setInputProcessor(this);
         blizMask = new BlizzardMask();
+
+		endGameBatch = new SpriteBatch();
+		winGame = new Sprite(new Texture("art/sprites/WinScreen.png"));
+		loseGame = new Sprite(new Texture("art/sprites/DeathScreen.png"));
 	}
 
 
 	@Override
-	public void render (){
+	public void render () {
 
-		camera.position.x = player.getSprite().getX() + player.getSprite().getOriginX();
-		camera.position.y = player.getSprite().getY() + player.getSprite().getOriginY();
-		camera.update();
-        //camera.rotate(0.25f);
-		world.update(camera, Gdx.graphics.getDeltaTime());
+		if (!player.overMap(target) && player.getLifeStatus()) {
+			camera.position.x = player.getSprite().getX() + player.getSprite().getOriginX();
+			camera.position.y = player.getSprite().getY() + player.getSprite().getOriginY();
+			camera.update();
+			//camera.rotate(0.25f);
+			world.update(camera, Gdx.graphics.getDeltaTime());
 
 
-        Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //Blizzard
-        blizMask.update(Gdx.graphics.getDeltaTime());
-        world.render(camera, spriteBatch);
+			Gdx.gl.glClearColor(1, 0, 0, 1);
+			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			//Blizzard
+			blizMask.update(Gdx.graphics.getDeltaTime());
+			world.render(camera, spriteBatch);
 
-        //Draw UI
-        spriteBatch.setProjectionMatrix(camera.combined);
-        spriteBatch.begin();
-        fireUI.move(player.getX(),player.getY());
-        fireUI.draw(spriteBatch);
-        fireUI.updatePercent(0.0f);
-        spriteBatch.end();
+			//Draw UI
+			spriteBatch.setProjectionMatrix(camera.combined);
+			spriteBatch.begin();
+			fireUI.move(player.getX(), player.getY());
+			fireUI.draw(spriteBatch);
+			fireUI.updatePercent(0.0f);
+			spriteBatch.end();
 
-        spriteBatch.setProjectionMatrix(new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()).combined);
-        spriteBatch.begin();
+			spriteBatch.setProjectionMatrix(new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()).combined);
+			spriteBatch.begin();
 
-        blizMask.draw(spriteBatch,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        spriteBatch.end();
+			blizMask.draw(spriteBatch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			spriteBatch.end();
 
-        blizzardtimer -= Gdx.graphics.getDeltaTime();
-        if(blizzardtimer <= 0)
-        {
-           if(blizzardtimer > -3)
-           {
-              blizMask.setIntensity(1.0f);
-           }
-           else if(!blizzardCalmed)
-           {
-               setRandCamDir();
-               blizzardCalmed = true;
+			blizzardtimer -= Gdx.graphics.getDeltaTime();
+			if (blizzardtimer <= 0) {
+				if (blizzardtimer > -3) {
+					blizMask.setIntensity(1.0f);
+				} else if (!blizzardCalmed) {
+					setRandCamDir();
+					blizzardCalmed = true;
 
-           }
-           else
-           {
-               blizMask.setIntensity(0.5f);
-               blizzardtimer = rand.nextFloat() * BLIZZARD_RANGE + BLIZZARD_MIN;
-           }
+				} else {
+					blizMask.setIntensity(0.5f);
+					blizzardtimer = rand.nextFloat() * BLIZZARD_RANGE + BLIZZARD_MIN;
+				}
 
-        }
-        movePlayer();
-		healPlayer();
+			}
+			movePlayer();
+			healPlayer();
+		}
+		else if( !player.getLifeStatus())
+		{
+			System.out.println("dead");
+			endGameBatch.begin();
+			loseGame.draw(endGameBatch);
+			endGameBatch.end();
+		}
+		else if(player.overMap(target))
+		{
+			System.out.println("win");
+			endGameBatch.begin();
+			winGame.draw(endGameBatch);
+			endGameBatch.end();
+		}
 
     }
 

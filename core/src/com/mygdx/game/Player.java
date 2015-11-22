@@ -38,6 +38,7 @@ public class Player extends GameObject{
     public final float MAX_DISTANCE_HOLD = 384;
     public final float START_WARM = 65;
     public final float START_FREEZE = 30;
+    private boolean alive;
 
     public final int MAX_STICKS = 3;
     public  int tinderboxes = 3;
@@ -73,6 +74,7 @@ public class Player extends GameObject{
         super.getSprite().setScale(1.5f);
         speed = MAX_SPEED;
         heat = MAX_HEAT;
+        alive = true;
 
         //setPosition(position[0], position[1]);
 
@@ -231,6 +233,12 @@ public class Player extends GameObject{
             //torch reduces heat loss in 1/5th
             heat -= ((torch.isLit() ? 1.0 : 5.0)/60.0);
         }
+
+        if(heat <= 0)
+        {
+            System.out.println("DEAD");
+            alive = false;
+        }
         //System.out.println("heat: " + heat);
     }
 
@@ -274,5 +282,10 @@ public class Player extends GameObject{
     public Torch getTorch()
     {
         return torch;
+    }
+
+    public boolean getLifeStatus()
+    {
+        return alive;
     }
 }
