@@ -118,7 +118,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 		player = new Player(new Texture("art/sprites/PlayerChar.png"));
 		//player.setSpeed(0.75f);
 		//testStick = new Stick(new Sprite(new Texture("art/sprites/Stick.png")));
-		target = new GoalMap(new Sprite(new Texture("art/sprites/map.png")));
+		target = new GoalMap(11*64,64*64 - 9*64);
         world.addGameObject(player);
 		//world.addGameObject(testStick);
 		world.addGameObject(target);
@@ -126,7 +126,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 		camera = new GameCamera();
 		camera.setToOrtho(false, w, h);
 
-        player.setPosition(11*64,64*64 - 9*64);
+        player.setPosition(8*64, 11*64);
 
         camera.zoom = 1.f;
 		camera.update();

@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 /**
@@ -7,13 +8,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
  */
 public class GoalMap extends GameObject {
 
-    private float[] position = new float[2];
-    public GoalMap(Sprite sprite)
+    public GoalMap(float x, float y)
     {
-        super(sprite);
+
+        super(new Sprite(new Texture("art/sprites/map.png")));
         updateShadow(0,0);
-        position[0] = 11*64;
-        position[1] = 64*64 - 8*64;
+        super.setPosition(x,y);
     }
 
 
