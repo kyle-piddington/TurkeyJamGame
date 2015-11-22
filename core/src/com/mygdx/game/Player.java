@@ -34,7 +34,7 @@ public class Player extends GameObject{
     }
     public boolean canLightFire()
     {
-        if(sticks >= 3)
+        if(sticks >= 2)
         {
             if(torch.isLit())
             {
@@ -56,6 +56,14 @@ public class Player extends GameObject{
         tinderboxes-=i;
     }
 
+    public int getTinderboxes() {
+        return tinderboxes;
+    }
+
+    public int getSticks() {
+        return sticks;
+    }
+
     enum Direction
     {
         UP,
@@ -72,7 +80,8 @@ public class Player extends GameObject{
     private Animation playerLeftAnimation;
     private Animation playerRightAnimation;
     float lastFireDist;
-    private float speed, heat, sticks;
+    private float speed, heat;
+    private int sticks;
     private float[] position = new float[2];
     public final float MAX_SPEED =  2f;
     public final float MIN_SPEED = 0.75f;

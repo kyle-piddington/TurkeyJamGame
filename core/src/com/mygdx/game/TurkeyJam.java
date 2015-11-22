@@ -68,19 +68,24 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
                 for (Stick stick : world.getStickList()) {
                     if (player.pickUpStick(stick)) {
                         world.removeGameObject(stick);
+                        gameGui.updateBranchCount(player.getSticks());
                         break;
                     }
             }
             break;
             case TORCH:
                 player.lightTorch();
+                gameGui.updateBranchCount(player.getSticks());
+                gameGui.updateTinderCount(player.getTinderboxes());
                 break;
             case LIGHT:
 
-                player.useBranches(3);
+                player.useBranches(2);
+                gameGui.updateBranchCount(player.getSticks());
                 if(!player.getTorch().isLit())
                 {
                     player.useTinderboxes(1);
+                    gameGui.updateTinderCount(player.getTinderboxes());
                 }
                 world.addGameObject(new Fire(player.getX(),player.getY()));
                 break;
