@@ -230,7 +230,13 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 		}
 		else if(player.overMap(target))
 		{
-			System.out.println("win");
+			slowSteps.dispose();
+			medSteps.dispose();
+			fastSteps.dispose();
+			fireMusic.dispose();
+			fireAmbient.dispose();
+			windAmbient.dispose();
+
 			endGameBatch.begin();
 			winGame.draw(endGameBatch);
 			endGameBatch.end();
@@ -476,7 +482,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 			soundVolume();
 	}
 
-	public void soundVolume()
+	private void soundVolume()
 	{
 		float heatLevel, volume;
 
