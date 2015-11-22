@@ -235,7 +235,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 			case Input.Keys.LEFT:
 				//camera.translate(-32,0);
 				moveLeft = false;
-				fastSteps.stop();
+				//fastSteps.stop();
 				break;
 			case Input.Keys.RIGHT:
 				//camera.translate(32,0);
