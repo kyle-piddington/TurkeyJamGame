@@ -6,6 +6,8 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -28,8 +30,13 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	SpriteBatch spriteBatch;
 	Player player;
 	Stick testStick;
+	Sound windAmbient;
+	Sound fireAmbient;
+	Music fireMusic;
 
 	float mapHeight, mapWidth;
+
+	long windID, fireID;
 
 	boolean moveLeft,moveRight,moveUp,moveDown;
 
@@ -46,7 +53,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		TiledMapTileLayer temp = (TiledMapTileLayer) world.getMap().getLayers().get(0);
 		mapHeight = temp.getHeight() * temp.getTileHeight();
 		mapWidth = temp.getWidth() * temp.getTileWidth();
-		player = new Player(new Sprite(new Texture("art/sprites/PlayerPlaceholder.png")));
+		player = new Player(new Texture("art/sprites/PlayerChar.png"));
 		player.setSpeed(0.75f);
 		testStick = new Stick(new Sprite(new Texture("art/sprites/Stick.png")));
         world.addGameObject(player);
@@ -57,6 +64,18 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		camera.zoom = 1.f;
 		camera.update();
         world.addGameObject(new Fire(11*64,64*64 - 8*64));
+
+		fireMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/ambient_fire_music.wav"));
+		fireAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/fire_sound.wav"));
+		windAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/wind_sound.wav"));
+
+		windID = windAmbient.loop(0.2f);
+
+		fireID = fireAmbient.loop(0f);
+
+		fireMusic.play();
+		fireMusic.setLooping(true);
+		fireMusic.setVolume(0f);
 
 		Gdx.input.setInputProcessor(this);
 	}
@@ -179,8 +198,13 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	public void healPlayer()
 	{
 		float distance;
-		if(world.getFire() == null)
+		float volume;
+
+		if(world.getFire() == null) {
+
 			distance = 0;
+			//fireAmbient.stop();
+		}
 		else {
 			float tempX = (player.getX() - world.getFire().get(0).getX());
 			float tempY = (player.getY() - world.getFire().get(0).getY());
@@ -188,6 +212,12 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 			distance = (float) Math.sqrt((tempX * tempX) + (tempY * tempY));
 		}
 		player.fireWarm(distance);
+
+		volume = (distance <= 500f) ? 1f - (distance % 500f)*0.001f : 0f;
+
+		fireMusic.setVolume(volume * 0.2f);
+		windAmbient.setVolume(windID, 0.3f - volume);
+		fireAmbient.setVolume(fireID, volume);
 	}
 
 	@Override

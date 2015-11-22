@@ -29,11 +29,11 @@ public class Fire extends GameObject {
 
         Timeline.createSequence()
             .push(Tween.to(getSprite(), SpriteAccessor.TWEEN_SCALEXY,0.2f)
-                .target(1.3f,2.8f)
+                .target(1.3f,1.8f)
             )
-            .push(Tween.to(getSprite(),SpriteAccessor.TWEEN_SCALEXY,1.0f)
-                .target(2.5f,2.5f)
-                .ease(TweenEquations.easeOutElastic))
+            .push(Tween.to(getSprite(), SpriteAccessor.TWEEN_SCALEXY, 1.0f)
+                    .target(1.5f, 1.5f)
+                    .ease(TweenEquations.easeOutElastic))
             .start(World.manager);
 
 
@@ -47,7 +47,11 @@ public class Fire extends GameObject {
         }
         fireAnimation = new Animation(0.25f,frames);
         super.getSprite().setRegion(fireAnimation.getKeyFrame(0));
+        disableShadow();
     }
+
+
+
     public void update(float dt)
     {
         t += dt;
