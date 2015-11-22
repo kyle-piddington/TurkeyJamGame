@@ -37,15 +37,15 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	//Stick testStick;
 	Sound windAmbient;
 	Sound fireAmbient;
-	Sound fastSteps;
-	Sound medSteps;
-	Sound slowSteps;
+	Music fastSteps;
+	Music medSteps;
+	Music slowSteps;
 	Music fireMusic;
     BlizzardMask blizMask;
 	GoalMap target;
 	float mapHeight, mapWidth;
     float blizzardtimer = 10.0f;
-	long windID, fireID, fastID, medID, slowID;
+	long windID, fireID;
     Random rand = new Random();
 	boolean moveLeft,moveRight,moveUp,moveDown;
     private CameraDirection camDir = CameraDirection.NORTH;
@@ -96,9 +96,10 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		fireMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/ambient_fire_music.wav"));
 		fireAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/fire_sound.wav"));
 		windAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/wind_sound.wav"));
-		fastSteps = Gdx.audio.newSound(Gdx.files.internal("sound/footsteps_fast.wav"));
-		medSteps = Gdx.audio.newSound(Gdx.files.internal("sound/footsteps_med.wav"));
-		slowSteps = Gdx.audio.newSound(Gdx.files.internal("sound/footsteps_slow.wav"));
+
+		fastSteps = Gdx.audio.newMusic(Gdx.files.internal("sound/footsteps_fast.wav"));
+		medSteps = Gdx.audio.newMusic(Gdx.files.internal("sound/footsteps_med.wav"));
+		slowSteps = Gdx.audio.newMusic(Gdx.files.internal("sound/footsteps_slow.wav"));
 
 		windID = windAmbient.loop(0.2f);
 		fireID = fireAmbient.loop(0f);
@@ -106,6 +107,10 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		fireMusic.play();
 		fireMusic.setLooping(true);
 		fireMusic.setVolume(0f);
+
+		fastSteps.play();
+		fastSteps.setLooping(true);
+		fastSteps.setVolume(0f);
 
         fireUI = new FireUIElement();
 		Gdx.input.setInputProcessor(this);
@@ -190,22 +195,26 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 			case Input.Keys.LEFT:
 				//camera.translate(-32,0);
 				moveLeft = true;
-				fastID = fastSteps.loop(1f);
+				if(fastSteps.getVolume() == 0f)
+					fastSteps.setVolume(1f);
 				break;
 			case Input.Keys.RIGHT:
 				//camera.translate(32,0);
 				moveRight = true;
-				fastID = fastSteps.loop(1f);
+				if(fastSteps.getVolume() == 0f)
+					fastSteps.setVolume(1f);
 				break;
 			case Input.Keys.UP:
 				//camera.translate(0,-32);
+				if(fastSteps.getVolume() == 0f)
+					fastSteps.setVolume(1f);
 				moveUp = true;
-				fastID = fastSteps.loop(1f);
 				break;
 			case Input.Keys.DOWN:
 				//camera.translate(0,32);
 				moveDown = true;
-				fastID = fastSteps.loop(1f);
+				if(fastSteps.getVolume() == 0f)
+					fastSteps.setVolume(1f);
 				break;
 			case Input.Keys.SPACE:
 
@@ -235,22 +244,18 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 			case Input.Keys.LEFT:
 				//camera.translate(-32,0);
 				moveLeft = false;
-				//fastSteps.stop();
 				break;
 			case Input.Keys.RIGHT:
 				//camera.translate(32,0);
 				moveRight = false;
-				fastSteps.stop();
 				break;
 			case Input.Keys.UP:
 				//camera.translate(0,-32);
 				moveUp = false;
-				fastSteps.stop();
 				break;
 			case Input.Keys.DOWN:
 				//camera.translate(0,32);
 				moveDown = false;
-				fastSteps.stop();
 				break;
 			case Input.Keys.SPACE:
                 break;
@@ -334,6 +339,10 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
         {
             vel.y = -32.f;
         }
+		if(!moveLeft && !moveRight && !moveUp && !moveDown)
+		{
+			fastSteps.setVolume(0f);
+		}
         Vector2 directionalVel = camVector(vel);
         directionalVel.nor();
         world.checkCollision(player,directionalVel);
@@ -380,9 +389,9 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 
 		if(volume != 0f) {
 
-			fireMusic.setVolume(musicVolume);
+			fireMusic.setVolume(musicVolume - 0.05f);
 			windAmbient.setVolume(windID, 0.25f - Math.max(0f, Math.min(0.24f, volume / 5)));
-			fireAmbient.setVolume(fireID, volume);
+			fireAmbient.setVolume(fireID, musicVolume);
 		}
 		else
 			soundVolume();
