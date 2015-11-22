@@ -47,7 +47,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		mapHeight = temp.getHeight() * temp.getTileHeight();
 		mapWidth = temp.getWidth() * temp.getTileWidth();
 		player = new Player(new Sprite(new Texture("art/sprites/PlayerPlaceholder.png")));
-		player.setSpeed(4);
+		player.setSpeed(0.75f);
 		testStick = new Stick(new Sprite(new Texture("art/sprites/Stick.png")));
         world.addGameObject(player);
 		world.addGameObject(testStick);
@@ -76,6 +76,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 
         world.render(camera,spriteBatch);
 		movePlayer();
+		healPlayer();
     }
 
 	@Override
@@ -170,8 +171,22 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
         vel.nor();
         world.checkCollision(player,vel);
         vel.nor();
-        player.move(vel.x,vel.y,mapWidth-player.getSprite().getWidth(),mapHeight-player.getSprite().getHeight());
+        player.move(vel.x * player.getSpeed(),vel.y * player.getSpeed(),mapWidth-player.getSprite().getWidth(),mapHeight-player.getSprite().getHeight());
 
+	}
+
+	public void healPlayer()
+	{
+		float distance;
+		if(world.getFire() == null)
+			distance = 0;
+		else {
+			float tempX = (player.getX() - world.getFire().get(0).getX());
+			float tempY = (player.getY() - world.getFire().get(0).getY());
+
+			distance = (float) Math.sqrt((tempX * tempX) + (tempY + tempY));
+		}
+		player.fireWarm(distance);
 	}
 
 	@Override

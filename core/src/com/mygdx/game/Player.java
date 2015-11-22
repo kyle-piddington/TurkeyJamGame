@@ -8,28 +8,29 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
  */
 public class Player extends GameObject{
 
-    private int health, speed, heat, sticks;
+    private float speed, heat, sticks;
     private float[] position = new float[2];
-    public final int MAX_HEALTH =  100;
-    public final int MAX_SPEED =  100;
-    public final int MAX_HEAT =  100;
+    public final float MAX_SPEED =  4f;
+    public final float MIN_SPEED = 0.75f;
+    public final float MAX_HEAT =  100;
+    public final float MAX_DISTANCE_WARM = 256;
+    public final float MAX_DISTANCE_HOLD = 384;
 
     public Player(Sprite sprite)
     {
         super(sprite);
-        health = MAX_HEALTH;
         speed = MAX_SPEED;
         heat = MAX_HEAT;
         //setPosition(position[0], position[1]);
 
     }
 
-    public int getSpeed()
+    public float getSpeed()
     {
         return this.speed;
     }
 
-    public void setSpeed(int speed)
+    public void setSpeed(float speed)
     {
         this.speed = speed;
     }
@@ -84,5 +85,27 @@ public class Player extends GameObject{
         position[0] = x;
         position[1] = y;
         super.setPosition(x,y);
+    }
+
+    public void fireWarm(float distance)
+    {
+        System.out.println(distance);
+        if(heat < MAX_HEAT && distance < MAX_DISTANCE_WARM) {
+            System.out.println("hi");
+            heat += (12.0/60.0);
+            System.out.println("warm: " + heat);
+        }
+        if(heat > 0 && distance > MAX_DISTANCE_HOLD)
+        {
+            heat -= (5.0/60.0);
+        }
+        System.out.println("heat: " + heat);
+    }
+
+    public void freezeSlowdown()
+    {
+        if(heat > 65 && speed < MAX_SPEED)
+        {
+        }
     }
 }

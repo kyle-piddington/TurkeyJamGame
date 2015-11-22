@@ -119,6 +119,7 @@ public class World {
         renderables = new LinkedList<Renderable>();
         billboardedRenderables = new ArrayList<SpriteRenderable>();
         stickList = new LinkedList<Stick>();
+        fires = new LinkedList<Fire>();
         removeObjects = new LinkedList<GameObject>();
 
         //Set up trees
@@ -162,6 +163,11 @@ public class World {
     TiledMap getMap()
     {
         return map;
+    }
+
+    List<Fire> getFire()
+    {
+        return fires;
     }
 
 
@@ -218,6 +224,10 @@ public class World {
         if(object instanceof Stick)
         {
             stickList.add((Stick) object);
+        }
+        if(object instanceof Fire)
+        {
+            fires.add((Fire) object);
         }
 
     }
