@@ -76,6 +76,11 @@ public class Player extends GameObject{
         return this.speed;
     }
 
+    public float getHeat()
+    {
+        return this.heat;
+    }
+
     public void setSpeed(float speed)
     {
         this.speed = speed;

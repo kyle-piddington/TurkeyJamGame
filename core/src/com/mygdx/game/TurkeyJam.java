@@ -297,7 +297,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	public void healPlayer()
 	{
 		float distance;
-		float volume, windVol;
+		float volume, musicVolume;
 
 		if(world.getFire() == null) {
 
@@ -316,12 +316,30 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
         }
 		player.fireWarm(distance);
 
-		volume = (distance <= 300f) ? 1f - (distance % 300)*0.001f : 0f;
-		//windVol = (0.2f - volume) > 0f ? 0.2f - volume : 0.1f;
+		volume = (distance <= 500f) ? 1f - (distance % 500) * 0.001f : 0f;
+		volume = (volume > 0f) ? volume : 0f;
+		musicVolume = (volume - 0.5f) > 0f ? volume - 0.5f : 0.1f;
 
-		fireMusic.setVolume(volume / 2);
-		windAmbient.setVolume(windID, 0.2f - volume * 0.05f);
-		fireAmbient.setVolume(fireID, volume);
+		if(volume != 0f) {
+
+			fireMusic.setVolume(musicVolume);
+			windAmbient.setVolume(windID, 0.25f - Math.max(0f, Math.min(0.24f, volume / 5)));
+			fireAmbient.setVolume(fireID, volume);
+		}
+		else
+			soundVolume();
+	}
+
+	public void soundVolume()
+	{
+		float heatLevel, volume;
+
+		heatLevel = player.getHeat();
+		volume = Math.min(1f, (100f - heatLevel) * 0.01f + 0.2f);
+
+		fireMusic.setVolume(0f);
+		fireAmbient.setVolume(fireID, 0f);
+		windAmbient.setVolume(windID, volume);
 	}
 
 	@Override
