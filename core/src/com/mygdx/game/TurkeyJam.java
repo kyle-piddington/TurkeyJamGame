@@ -91,7 +91,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
         player.setPosition(11*64,64*64 - 9*64);
 		camera.zoom = 1.f;
 		camera.update();
-        world.addGameObject(new Fire(11*64,64*64 - 8*64));
+        world.addGameObject(new Fire(7*64,10*64));
 
 		fireMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/ambient_fire_music.wav"));
 		fireAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/fire_sound.wav"));
