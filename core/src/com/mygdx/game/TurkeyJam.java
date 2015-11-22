@@ -38,6 +38,8 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	Sound fireAmbient;
 	Music fireMusic;
     BlizzardMask blizMask;
+	boolean gameOver;
+	GoalMap target;
 	float mapHeight, mapWidth;
     float blizzardtimer = 10.0f;
 	long windID, fireID;
@@ -72,8 +74,11 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		player = new Player(new Texture("art/sprites/PlayerChar.png"));
 		player.setSpeed(0.75f);
 		testStick = new Stick(new Sprite(new Texture("art/sprites/Stick.png")));
+		target = new GoalMap(new Sprite(new Texture("art/sprites/map.png")));
         world.addGameObject(player);
 		world.addGameObject(testStick);
+		world.addGameObject(target);
+
 		camera = new GameCamera();
 		camera.setToOrtho(false, w, h);
         player.setPosition(11*64,64*64 - 9*64);
