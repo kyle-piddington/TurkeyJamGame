@@ -78,4 +78,7 @@ public class Fire extends GameObject {
         return out;
     }
 
+    public float firePercent() {
+        return fireLife / (60*3.f);
+    }
 }

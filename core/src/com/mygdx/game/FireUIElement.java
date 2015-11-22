@@ -23,8 +23,6 @@ public class FireUIElement {
     {
         fullSprite = new Sprite(fullUITexture);
         emptySprite = new Sprite(emptyUITexture);
-        fullSprite.setOrigin(fullUITexture.getWidth()/2.f,0);
-        emptySprite.setOrigin(fullUITexture.getWidth()/2.f,fullUITexture.getHeight());
         emptySprite.setAlpha(0);
         fullSprite.setAlpha(0);
 
@@ -36,7 +34,10 @@ public class FireUIElement {
             fullSprite.setPosition(x,y);
             emptySprite.setPosition(x,y);
             Tween.to(fullSprite,SpriteAccessor.TWEEN_ALPHA,0.3f)
-                    .target(1)
+                    .target(0.6f)
+                    .start(World.manager);
+            Tween.to(emptySprite,SpriteAccessor.TWEEN_ALPHA,0.3f)
+                    .target(0.8f)
                     .start(World.manager);
         }
     }
@@ -47,6 +48,10 @@ public class FireUIElement {
             Tween.to(fullSprite, SpriteAccessor.TWEEN_ALPHA,0.3f)
                     .target(0)
                     .start(World.manager);
+            Tween.to(emptySprite,SpriteAccessor.TWEEN_ALPHA,0.3f)
+                    .target(0)
+                    .start(World.manager);
+            shown = false;
         }
     }
     public void move(float x, float y)
@@ -56,10 +61,15 @@ public class FireUIElement {
             if(!shown)
             {
                 display(x,y);
+                shown = true;
             }
             else
             {
-                Tween.to(fullSprite,SpriteAccessor.TWEEN_XY,3.3f)
+
+                Tween.to(fullSprite,SpriteAccessor.TWEEN_XY,0.5f)
+                        .target(x,y)
+                        .start(World.manager);
+                Tween.to(emptySprite,SpriteAccessor.TWEEN_XY,0.5f)
                         .target(x,y)
                         .start(World.manager);
             }
@@ -71,10 +81,8 @@ public class FireUIElement {
     {
 
         emptySprite.draw(sb);
-        sb.setColor(new Color(1,1,1,fullSprite.getColor().a));
-        sb.draw(fullUITexture,fullSprite.getX(),fullSprite.getY(),
-                0,(int)(fullUITexture.getHeight()*percent),
-                (int)(fullUITexture.getWidth()) ,(int)(fullUITexture.getHeight() * (1-percent)));
+        fullSprite.setScale(percent);
+        fullSprite.draw(sb);
 
     }
     public void updatePercent(float pct)
