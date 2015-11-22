@@ -7,6 +7,7 @@ import aurelienribon.tweenengine.TweenEquations;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.TweenWrappers.SpriteAccessor;
 
@@ -17,12 +18,13 @@ public class Fire extends GameObject {
     private static final int NUM_FRAMES = 4;
     int numFrames;
     int currFrame = 0;
-    float fireLife = 10; //3 minutes of life by default
+    float fireLife = 60*3; //3 minutes of life by default
     float t;
     boolean out = false;
     Animation fireAnimation;
 
     public Fire(float x, float y) {
+
         super(new Sprite(new Texture("art/sprites/fire.png")));
         super.setPosition(x, y);
         super.getSprite().setScale(0.0f);
@@ -47,6 +49,7 @@ public class Fire extends GameObject {
         }
         fireAnimation = new Animation(0.25f,frames);
         super.getSprite().setRegion(fireAnimation.getKeyFrame(0));
+
         disableShadow();
     }
 
@@ -55,7 +58,6 @@ public class Fire extends GameObject {
     public void update(float dt)
     {
         t += dt;
-
         fireLife -= dt;
         if(fireLife > 0)
             super.getSprite().setRegion(fireAnimation.getKeyFrame(t, true));
@@ -69,6 +71,8 @@ public class Fire extends GameObject {
 
         }
     }
+
+
     public boolean isExtinguished()
     {
         return out;

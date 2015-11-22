@@ -46,7 +46,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
     Random rand = new Random();
 	boolean moveLeft,moveRight,moveUp,moveDown;
     private CameraDirection camDir = CameraDirection.NORTH;
-
+    private FireUIElement fireUI;
 
     private boolean blizzardCalmed = false;
     private  static final float BLIZZARD_MIN =  20.f;
@@ -98,6 +98,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		fireMusic.setLooping(true);
 		fireMusic.setVolume(0f);
 
+        fireUI = new FireUIElement();
 		Gdx.input.setInputProcessor(this);
         blizMask = new BlizzardMask();
 	}
@@ -119,8 +120,18 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
         //Blizzard
         blizMask.update(Gdx.graphics.getDeltaTime());
         world.render(camera, spriteBatch);
-        spriteBatch.setProjectionMatrix(new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight()).combined);
+
+        //Draw UI
+        spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
+        fireUI.move(player.getX(),player.getY());
+        fireUI.draw(spriteBatch);
+        fireUI.updatePercent(0.0f);
+        spriteBatch.end();
+
+        spriteBatch.setProjectionMatrix(new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()).combined);
+        spriteBatch.begin();
+
         blizMask.draw(spriteBatch,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         spriteBatch.end();
 
@@ -216,7 +227,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 				//tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
 				break;
 			case Input.Keys.NUM_2:
-				//tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
+				player.lightTorch();
 				break;
 		}
 		return false;
@@ -313,8 +324,14 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 			distance = (float) Math.sqrt((tempX * tempX) + (tempY * tempY));
 		    if(nearestFire.isExtinguished())
                 distance = 100000;
+            if(distance < 128)
+            {
+
+            }
         }
 		player.fireWarm(distance);
+
+
 
 		volume = (distance <= 500f) ? 1f - (distance % 500f)*0.001f : 0f;
 
