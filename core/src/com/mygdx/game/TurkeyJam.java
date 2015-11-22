@@ -36,7 +36,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 
 	float mapHeight, mapWidth;
 
-	long windID, fireID, musicID;
+	long windID, fireID;
 
 	boolean moveLeft,moveRight,moveUp,moveDown;
 
@@ -70,6 +70,12 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		windAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/wind_sound.wav"));
 
 		windID = windAmbient.loop(0.2f);
+
+		fireID = fireAmbient.loop(0f);
+
+		fireMusic.play();
+		fireMusic.setLooping(true);
+		fireMusic.setVolume(0f);
 
 		Gdx.input.setInputProcessor(this);
 	}
@@ -192,8 +198,13 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	public void healPlayer()
 	{
 		float distance;
-		if(world.getFire() == null)
+		float volume;
+
+		if(world.getFire() == null) {
+
 			distance = 0;
+			//fireAmbient.stop();
+		}
 		else {
 			float tempX = (player.getX() - world.getFire().get(0).getX());
 			float tempY = (player.getY() - world.getFire().get(0).getY());
@@ -201,6 +212,12 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 			distance = (float) Math.sqrt((tempX * tempX) + (tempY * tempY));
 		}
 		player.fireWarm(distance);
+
+		volume = (distance <= 500f) ? 1f - (distance % 500f)*0.001f : 0f;
+
+		fireMusic.setVolume(volume * 0.2f);
+		windAmbient.setVolume(windID, 0.3f - volume);
+		fireAmbient.setVolume(fireID, volume);
 	}
 
 	@Override
