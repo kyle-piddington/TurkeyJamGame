@@ -1016,7 +1016,7 @@
  </tileset>
  <layer name="Background" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJztzrERQFAQBcCLUAIq+IP+6/MaEP8bs8HmO6pqAPBpiTW2BpcZ9jjibHCZ4Yo7ngYXAAAAAAAAAAAAAAAAAODfXgPhf5g=
+   eJztzrEVQEAQBcCNUMAFKAH91+c3IL593gSTz6iqAcCnJdbYGlxm2OOIs8FlhivueBpcAAAAAAAAAAAAAAAAAIB/ewHW/kA9
   </data>
  </layer>
  <layer name="Trees" width="64" height="64">
