@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="64" tileheight="64" nextobjectid="16">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="64" tileheight="64" nextobjectid="40">
  <tileset firstgid="1" name="RPG set" tilewidth="64" tileheight="64" tilecount="230">
   <tile id="0">
    <image width="64" height="64" source="../art/RPGTilesheet/rpgTile000.png"/>
@@ -1009,12 +1009,18 @@
    <image width="100" height="100" source="../art/GameIcons/Black/2x/zoomOut.png"/>
   </tile>
  </tileset>
- <tileset firstgid="336" name="GameObjects" tilewidth="128" tileheight="32" tilecount="2">
+ <tileset firstgid="336" name="GameObjects" tilewidth="128" tileheight="64" tilecount="4">
   <tile id="0">
    <image width="32" height="32" source="../art/sprites/Stick.png"/>
   </tile>
   <tile id="1">
    <image width="128" height="32" source="../art/sprites/fire.png"/>
+  </tile>
+  <tile id="2">
+   <image width="31" height="49" source="../art/sprites/summer_pine_tree_tiles.png"/>
+  </tile>
+  <tile id="3">
+   <image width="64" height="64" source="../art/sprites/map.png"/>
   </tile>
  </tileset>
  <layer name="Background" width="64" height="64">
@@ -1024,12 +1030,12 @@
  </layer>
  <layer name="Trees" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJzt1LEJACAMRcHsP5eDWVlqoRBCvIM0wi9eYwSwjIfr4LZDfw/6c3fV6N+/n/55/T3oz91Voz93V83v/QAAAAAAAAAAAAAAQD0TfCwkwQ==
+   eJztlWuuxCAIhd3/um5mXZPcXxOCcHiJtpKQTEcQvoO1nzHG5/r169ev//sfcc5ozAlu5UesuufMmhb+VfYE/shsL3/dexPht2iwml/Lm/Xmvf+r5hPhn+X+rlEdsvmrGDxngLJydar4vSxanrY2mN9SXJSfs+g8Z/uh+ljqRviROtZ+kBqz/Ty1Vt1/UQ001sGsZfJ7e9fOc1S72Rpaq5qf9hHRoOLMVfH/mnc20RwkL8ovmVefzDOgaVDFHz0jmfxSbgW/dSZoHhcT1a6Dn4tDcqP8XOxqfimmgl/rbcX3H50xso7yS8wd/EgvnvNhie3kt2qFasM9Sxqewo9qQH9b+9yRXzu/klnrWPirzHIGPHtl8COz8dRHNKi0bn5rrmbWvXfiR/Kfyo9qYGU/iV/TgFtDap7Er+3zdv7smln81CK90z2kPZ/Ib9lP0mVmJ/Brc0f4kf8z33+ro/zU3sAv9T+YZ02nSn5PXc/sMrRdwY+yRmx3fi4ma87evCp+pA6i0dP4tbgu/t/8yvu/ix+x3fnR/qP6efitZw3hyGas4s/skfJn6FvJP7NOfuk5k1+yFfxIbaQXmpfBHzGNj4u1aiTt0zn/bPf00vn+7+Cd9/8OXvn9P8FR/uvXr19/g38BmlQ70w==
   </data>
  </layer>
  <layer name="Rocks" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJzt0jENAAAIA0H8C0UHMxsDSZc7BZ+0VQCwdTqAmOv2PgIAAAAAAAAAAAAAAAAA/wacsAKz
+   eJzt2lEKgCAQBcC9/0E9R0T0kSQEUoFvBoT+3Je4IlgFAFft7wLqqKEfSfq8X+V/Os/b9aSvP8AMPROAWc4SYKcXAAAAsDp3X8jTBt8AwBqS353e5U35Byk5R+Qnef+fkvs/AGvbACG3IFk=
   </data>
  </layer>
  <objectgroup name="Sticks">
@@ -1037,5 +1043,19 @@
   <object id="12" gid="336" x="519.972" y="465.392" width="32" height="32"/>
   <object id="13" gid="336" x="866.292" y="471.576" width="32" height="32"/>
   <object id="14" gid="336" x="845.678" y="380.873" width="32" height="32"/>
+  <object id="25" gid="336" x="463" y="3460" width="32" height="32"/>
+  <object id="26" gid="336" x="663" y="3456" width="32" height="32"/>
+  <object id="27" gid="336" x="551" y="3618" width="32" height="32"/>
+  <object id="28" gid="336" x="872" y="2868" width="32" height="32"/>
+  <object id="29" gid="336" x="923" y="2884" width="32" height="32"/>
+  <object id="30" gid="336" x="1676" y="2497" width="32" height="32"/>
+  <object id="31" gid="336" x="3357" y="2315" width="32" height="32"/>
+  <object id="32" gid="336" x="528" y="3155" width="32" height="32"/>
+  <object id="33" gid="336" x="1418" y="1687" width="32" height="32"/>
+  <object id="35" gid="336" x="1375" y="1704" width="32" height="32"/>
+  <object id="36" gid="336" x="1358" y="2845" width="32" height="32"/>
+  <object id="37" gid="336" x="3107" y="3102" width="32" height="32"/>
+  <object id="38" gid="336" x="3141" y="2845" width="32" height="32"/>
  </objectgroup>
+ <objectgroup name="Map"/>
 </map>
