@@ -10,5 +10,6 @@ public class GoalMap extends GameObject {
     public GoalMap(Sprite sprite)
     {
         super(sprite);
+        updateShadow(0,0);
     }
 }

@@ -4,6 +4,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
@@ -27,7 +28,7 @@ public class Player extends GameObject{
     private Animation playerDownAnimation;
     private Animation playerLeftAnimation;
     private Animation playerRightAnimation;
-
+    float lastFireDist;
     private float speed, heat, sticks;
     private float[] position = new float[2];
     public final float MAX_SPEED =  2f;
@@ -37,6 +38,13 @@ public class Player extends GameObject{
     public final float MAX_DISTANCE_HOLD = 384;
     public final float START_WARM = 65;
     public final float START_FREEZE = 30;
+    private boolean alive;
+
+    public final int MAX_STICKS = 3;
+    public  int tinderboxes = 3;
+    private Torch torch = new Torch(0);
+
+
 
 
     public Player(Texture playerTexture)
@@ -66,8 +74,22 @@ public class Player extends GameObject{
         super.getSprite().setScale(1.5f);
         speed = MAX_SPEED;
         heat = MAX_HEAT;
+        alive = true;
 
         //setPosition(position[0], position[1]);
+
+    }
+
+    public void render(SpriteBatch sb)
+    {
+        if(torch.isLit())
+        {
+            torch.torchSprite.setPosition(sprite.getX(),sprite.getY() - sprite.getHeight()/2);
+            torch.torchSprite.setRotation(sprite.getRotation());
+            torch.render(sb);
+
+        }
+        super.render(sb);
 
     }
 
@@ -93,6 +115,10 @@ public class Player extends GameObject{
         setPosition(position[0],position[1]);
         animate(dt);
         updateShadow();
+        if(torch.isLit())
+        {
+            torch.update(dt);
+        }
     }
 
     public void moveAnim(float x, float y)
@@ -182,7 +208,7 @@ public class Player extends GameObject{
 
     public boolean pickUpStick(Stick stick)
     {
-        if(overStick(stick))
+        if(overStick(stick) && sticks < MAX_STICKS)
         {
             sticks++;
             return true;
@@ -199,6 +225,8 @@ public class Player extends GameObject{
 
     public void fireWarm(float distance)
     {
+        //Check lighting distance for torch
+        lastFireDist = distance;
         //System.out.println(distance);
         if(heat < MAX_HEAT && distance < MAX_DISTANCE_WARM) {
             //System.out.println("hi");
@@ -207,7 +235,14 @@ public class Player extends GameObject{
         }
         if(heat > 0 && distance > MAX_DISTANCE_HOLD)
         {
-            heat -= (5.0/60.0);
+            //torch reduces heat loss in 1/5th
+            heat -= ((torch.isLit() ? 1.0 : 5.0)/60.0);
+        }
+
+        if(heat <= 0)
+        {
+            System.out.println("DEAD");
+            alive = false;
         }
         //System.out.println("heat: " + heat);
     }
@@ -223,5 +258,39 @@ public class Player extends GameObject{
         {
             speed -= 0.05f;
         }
+    }
+
+    public void lightTorch()
+    {
+        if(sticks > 0)
+        {
+            if(lastFireDist < 32.f)
+            {
+                System.out.println( "lit torch on fire");
+                torch = new Torch();
+                sticks--;
+
+            }
+            else if(tinderboxes > 0)
+            {
+                System.out.println("Lit torch on tinderbox");
+                tinderboxes--;
+                torch = new Torch();
+                sticks--;
+            }
+        }
+        else
+        {
+            System.out.println("No sticks");
+        }
+    }
+    public Torch getTorch()
+    {
+        return torch;
+    }
+
+    public boolean getLifeStatus()
+    {
+        return alive;
     }
 }
