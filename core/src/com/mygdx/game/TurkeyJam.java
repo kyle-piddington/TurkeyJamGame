@@ -37,12 +37,15 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	//Stick testStick;
 	Sound windAmbient;
 	Sound fireAmbient;
+	Sound fastSteps;
+	Sound medSteps;
+	Sound slowSteps;
 	Music fireMusic;
     BlizzardMask blizMask;
 	GoalMap target;
 	float mapHeight, mapWidth;
     float blizzardtimer = 10.0f;
-	long windID, fireID;
+	long windID, fireID, fastID, medID, slowID;
     Random rand = new Random();
 	boolean moveLeft,moveRight,moveUp,moveDown;
     private CameraDirection camDir = CameraDirection.NORTH;
@@ -93,9 +96,11 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		fireMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/ambient_fire_music.wav"));
 		fireAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/fire_sound.wav"));
 		windAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/wind_sound.wav"));
+		fastSteps = Gdx.audio.newSound(Gdx.files.internal("sound/footsteps_fast.wav"));
+		medSteps = Gdx.audio.newSound(Gdx.files.internal("sound/footsteps_med.wav"));
+		slowSteps = Gdx.audio.newSound(Gdx.files.internal("sound/footsteps_slow.wav"));
 
 		windID = windAmbient.loop(0.2f);
-
 		fireID = fireAmbient.loop(0f);
 
 		fireMusic.play();
@@ -185,18 +190,22 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 			case Input.Keys.LEFT:
 				//camera.translate(-32,0);
 				moveLeft = true;
+				fastID = fastSteps.loop(1f);
 				break;
 			case Input.Keys.RIGHT:
 				//camera.translate(32,0);
 				moveRight = true;
+				fastID = fastSteps.loop(1f);
 				break;
 			case Input.Keys.UP:
 				//camera.translate(0,-32);
 				moveUp = true;
+				fastID = fastSteps.loop(1f);
 				break;
 			case Input.Keys.DOWN:
 				//camera.translate(0,32);
 				moveDown = true;
+				fastID = fastSteps.loop(1f);
 				break;
 			case Input.Keys.SPACE:
 
@@ -214,6 +223,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
             case Input.Keys.NUM_3:
                 setRandCamDir();
 		}
+
 		return false;
 	}
 
@@ -225,18 +235,22 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 			case Input.Keys.LEFT:
 				//camera.translate(-32,0);
 				moveLeft = false;
+				fastSteps.stop();
 				break;
 			case Input.Keys.RIGHT:
 				//camera.translate(32,0);
 				moveRight = false;
+				fastSteps.stop();
 				break;
 			case Input.Keys.UP:
 				//camera.translate(0,-32);
 				moveUp = false;
+				fastSteps.stop();
 				break;
 			case Input.Keys.DOWN:
 				//camera.translate(0,32);
 				moveDown = false;
+				fastSteps.stop();
 				break;
 			case Input.Keys.SPACE:
                 break;
@@ -247,6 +261,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 				player.lightTorch();
 				break;
 		}
+
 		return false;
 	}
 
