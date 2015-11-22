@@ -108,10 +108,11 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 		TiledMapTileLayer temp = (TiledMapTileLayer) world.getMap().getLayers().get(0);
 		mapHeight = temp.getHeight() * temp.getTileHeight();
 		mapWidth = temp.getWidth() * temp.getTileWidth();
-		player = new Player(new Texture("art/sprites/PlayerChar.png"));
+		player = new Player(new Texture("art/sprites/PlayerChar.png"), 8*64, 11*64);
 		//player.setSpeed(0.75f);
 		//testStick = new Stick(new Sprite(new Texture("art/sprites/Stick.png")));
 		target = new GoalMap(11*64,64*64 - 9*64);
+		//target = new GoalMap(10 * 64, 8 * 64);
         world.addGameObject(player);
 		//world.addGameObject(testStick);
 		world.addGameObject(target);
@@ -167,7 +168,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 	@Override
 	public void render () {
 
-		if (!player.overMap(target) && player.getLifeStatus()) {
+		if (!player.returnedHome() && player.getLifeStatus()) {
 			camera.position.x = player.getSprite().getX() + player.getSprite().getOriginX();
 			camera.position.y = player.getSprite().getY() + player.getSprite().getOriginY();
 			camera.update();
@@ -213,6 +214,11 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
             updateGUI();
 			movePlayer();
 			healPlayer();
+			player.overMap(target);
+
+			if(player.foundMap())
+				world.removeGameObject(target);
+
 		}
 		else if(!player.getLifeStatus())
 		{
@@ -226,7 +232,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 			loseGame.draw(endGameBatch);
 			endGameBatch.end();
 		}
-		else if(player.overMap(target))
+		else if(player.returnedHome())
 		{
 			slowSteps.dispose();
 			medSteps.dispose();

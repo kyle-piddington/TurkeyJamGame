@@ -83,6 +83,7 @@ public class Player extends GameObject{
     private float speed, heat;
     private int sticks;
     private float[] position = new float[2];
+    private float[] startPosition = new float[2];
     public final float MAX_SPEED =  2f;
     public final float MIN_SPEED = 0.75f;
     public final float MAX_HEAT =  100;
@@ -90,7 +91,7 @@ public class Player extends GameObject{
     public final float MAX_DISTANCE_HOLD = 384;
     public final float START_WARM = 65;
     public final float START_FREEZE = 30;
-    private boolean alive;
+    private boolean alive, mapFound;
 
     public final int MAX_STICKS = 3;
     public  int tinderboxes = 3;
@@ -99,7 +100,7 @@ public class Player extends GameObject{
 
 
 
-    public Player(Texture playerTexture)
+    public Player(Texture playerTexture, float startX, float startY)
     {
         super(null);
         TextureRegion tmp[][] = TextureRegion.split(playerTexture,playerTexture.getHeight(),playerTexture.getHeight());
@@ -127,8 +128,9 @@ public class Player extends GameObject{
         speed = MAX_SPEED;
         heat = MAX_HEAT;
         alive = true;
-
-        //setPosition(position[0], position[1]);
+        startPosition[0] = startX;
+        startPosition[1] = startY;
+        setPosition(startX, startY);
 
     }
 
@@ -253,9 +255,32 @@ public class Player extends GameObject{
         return stick.getSprite().getBoundingRectangle().overlaps(this.getSprite().getBoundingRectangle());
     }
 
-    public boolean overMap(GoalMap map)
+    public void overMap(GoalMap map)
     {
-        return map.getSprite().getBoundingRectangle().overlaps(this.getSprite().getBoundingRectangle());
+        if(map.getSprite().getBoundingRectangle().overlaps(this.getSprite().getBoundingRectangle()))
+            mapFound = true;
+        //return map.getSprite().getBoundingRectangle().overlaps(this.getSprite().getBoundingRectangle());
+    }
+
+    public boolean foundMap()
+    {
+        return mapFound;
+    }
+
+    public boolean returnedHome()
+    {
+        float minStartX = this.startPosition[0] - 50;
+        float maxStartX = this.startPosition[0] + 50;
+        float minStartY = this.startPosition[1] - 50;
+        float maxStartY = this.startPosition[1] + 50;
+
+        boolean withinX = ((this.getX() < maxStartX) && (this.getX() > minStartX));
+        boolean withinY = ((this.getY() < maxStartY) && (this.getY() > minStartY));
+
+        boolean atHome = (withinX && withinY);
+        System.out.println(this.startPosition[0] + " " + this.startPosition[1]);
+        System.out.println(this.getX() + " " + this.getY());
+        return mapFound && atHome;
     }
 
     public boolean pickUpStick(Stick stick)
