@@ -48,6 +48,10 @@ public class World {
             {
                 return 1;
             }
+            else if(v1.y == v2.y)
+            {
+                return 0;
+            }
             else return -1;
         }
     }

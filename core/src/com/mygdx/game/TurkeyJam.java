@@ -37,6 +37,9 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 	//Stick testStick;
 	Sound windAmbient;
 	Sound fireAmbient;
+	Music fastSteps;
+	Music medSteps;
+	Music slowSteps;
 	Music fireMusic;
     BlizzardMask blizMask;
 	GoalMap target;
@@ -121,19 +124,26 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 
         camera.zoom = 1.f;
 		camera.update();
-        world.addGameObject(new Fire(11*64,64*64 - 8*64));
+        world.addGameObject(new Fire(7*64,10*64));
 
 		fireMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/ambient_fire_music.wav"));
 		fireAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/fire_sound.wav"));
 		windAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/wind_sound.wav"));
 
-		windID = windAmbient.loop(0.2f);
+		fastSteps = Gdx.audio.newMusic(Gdx.files.internal("sound/footsteps_fast.wav"));
+		medSteps = Gdx.audio.newMusic(Gdx.files.internal("sound/footsteps_med.wav"));
+		slowSteps = Gdx.audio.newMusic(Gdx.files.internal("sound/footsteps_slow.wav"));
 
+		windID = windAmbient.loop(0.2f);
 		fireID = fireAmbient.loop(0f);
 
 		fireMusic.play();
 		fireMusic.setLooping(true);
 		fireMusic.setVolume(0f);
+
+		fastSteps.play();
+		fastSteps.setLooping(true);
+		fastSteps.setVolume(0f);
 
         fireUI = new FireUIElement();
 		Gdx.input.setInputProcessor(this);
@@ -240,18 +250,26 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 			case Input.Keys.LEFT:
 				//camera.translate(-32,0);
 				moveLeft = true;
+				if(fastSteps.getVolume() == 0f)
+					fastSteps.setVolume(1f);
 				break;
 			case Input.Keys.RIGHT:
 				//camera.translate(32,0);
 				moveRight = true;
+				if(fastSteps.getVolume() == 0f)
+					fastSteps.setVolume(1f);
 				break;
 			case Input.Keys.UP:
 				//camera.translate(0,-32);
+				if(fastSteps.getVolume() == 0f)
+					fastSteps.setVolume(1f);
 				moveUp = true;
 				break;
 			case Input.Keys.DOWN:
 				//camera.translate(0,32);
 				moveDown = true;
+				if(fastSteps.getVolume() == 0f)
+					fastSteps.setVolume(1f);
 				break;
 			case Input.Keys.NUM_1:
 				world.addGameObject(new Fire(player.getX(),player.getY()));
@@ -262,6 +280,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
             case Input.Keys.NUM_3:
                 setRandCamDir();
 		}
+
 		return false;
 	}
 
@@ -295,6 +314,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 				player.lightTorch();
 				break;
 		}
+
 		return false;
 	}
 
@@ -381,6 +401,10 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
         {
             vel.y = -32.f;
         }
+		if(!moveLeft && !moveRight && !moveUp && !moveDown)
+		{
+			fastSteps.setVolume(0f);
+		}
         Vector2 directionalVel = camVector(vel);
         directionalVel.nor();
         world.checkCollision(player,directionalVel);
@@ -427,9 +451,9 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 
 		if(volume != 0f) {
 
-			fireMusic.setVolume(musicVolume);
+			fireMusic.setVolume(musicVolume - 0.05f);
 			windAmbient.setVolume(windID, 0.25f - Math.max(0f, Math.min(0.24f, volume / 5)));
-			fireAmbient.setVolume(fireID, volume);
+			fireAmbient.setVolume(fireID, musicVolume);
 		}
 		else
 			soundVolume();
