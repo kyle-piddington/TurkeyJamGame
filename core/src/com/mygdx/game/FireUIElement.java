@@ -12,15 +12,22 @@ import com.mygdx.game.TweenWrappers.SpriteAccessor;
  * Created by kpidding on 11/21/15.
  */
 public class FireUIElement {
-    static Texture fullUITexture = new Texture("art/sprites/FireFull.png");
-    static Texture emptyUITexture = new Texture("art/sprites/FireGrey.png");
+    Texture fullUITexture;
+    Texture emptyUITexture;
     ProgressBar bar;
     boolean shown;
     float targX, targY;
-    float percent;
+    float percent = 0;
+    float targPct = 0.0f;
     Sprite fullSprite,emptySprite;
     public FireUIElement()
     {
+        this(new Texture("art/sprites/FireFull.png"),new Texture("art/sprites/FireGrey.png"));
+    }
+    public FireUIElement(Texture fullTexture, Texture emptyTexture)
+    {
+        fullUITexture = fullTexture;
+        emptyUITexture = emptyTexture;
         fullSprite = new Sprite(fullUITexture);
         emptySprite = new Sprite(emptyUITexture);
         emptySprite.setAlpha(0);
@@ -79,7 +86,7 @@ public class FireUIElement {
     }
     public void draw(SpriteBatch sb)
     {
-
+        this.percent += (targPct - percent) * 0.01f;
         emptySprite.draw(sb);
         fullSprite.setScale(percent);
         fullSprite.draw(sb);
@@ -87,7 +94,7 @@ public class FireUIElement {
     }
     public void updatePercent(float pct)
     {
-        this.percent = pct;
+        this.targPct = pct;
     }
 
 

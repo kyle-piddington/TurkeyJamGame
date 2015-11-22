@@ -317,16 +317,16 @@ public class Player extends GameObject{
     {
         if(sticks > 0)
         {
-            if(lastFireDist < Fire.FireDist)
+            if(torch.isLit() || lastFireDist < Fire.FireDist)
             {
-                System.out.println( "lit torch on fire");
+
                 torch = new Torch();
                 sticks--;
 
             }
             else if(tinderboxes > 0)
             {
-                System.out.println("Lit torch on tinderbox");
+
                 tinderboxes--;
                 torch = new Torch();
                 sticks--;

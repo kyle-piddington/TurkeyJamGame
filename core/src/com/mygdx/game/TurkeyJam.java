@@ -1,14 +1,12 @@
 package com.mygdx.game;
 
 import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,15 +14,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.*;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.TweenWrappers.SpriteAccessor;
-import com.mygdx.game.test.TestGameObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 public class TurkeyJam extends ApplicationAdapter implements InputProcessor, ActionCallback{
@@ -264,6 +257,8 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 
         gameGui.setFireActive(player.canLightFire());
 
+        gameGui.updateTorchUI(player.getTorch().getLitPercent());
+        gameGui.updateThermoGUI(player.getHeat());
         gameGui.update();
     }
 

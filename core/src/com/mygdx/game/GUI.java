@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.TweenWrappers.ThermometerGUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,11 @@ public class GUI {
     private static final int tinderTileX = -Gdx.graphics.getWidth()/2 + 80, tinderTileY = -Gdx.graphics.getHeight()/2 + 20;
 
 
+    private FireUIElement torchUIElement;
+    private static final int torchUIX = -Gdx.graphics.getWidth()/2 + 30, torchUIY = -Gdx.graphics.getHeight() /2 + 40;
+
+    private ThermometerGUI thermometerGUI;
+    private static final int thermoUIX = -Gdx.graphics.getWidth()/2 + 10, thermoUIY = -Gdx.graphics.getHeight() /2 + 40;
 
     List<ActionTile> tiles;
     List<GuiCounter> counters;
@@ -39,7 +45,9 @@ public class GUI {
         fireTile = new FireTile(new Texture("art/sprites/StartFire.png"),fireTileX,fireTileY,cb);
         branchCounter = new GuiCounter(new Texture("art/sprites/LogHUD.png"),branchTileX,branchTileY,3,0);
         tinderCounter = new GuiCounter(new Texture("art/sprites/TinderboxHud.png"),tinderTileX,tinderTileY,3,3);
-
+        torchUIElement = new FireUIElement(new Texture("art/sprites/TorchUIFull.png"),new Texture("art/sprites/TorchUIEmpty.png"));
+        torchUIElement.move(torchUIX,torchUIY);
+        thermometerGUI = new ThermometerGUI(thermoUIX,thermoUIY);
         tiles.add(grabTile);
         tiles.add(torchTile);
         tiles.add(fireTile);
@@ -101,6 +109,8 @@ public class GUI {
         {
             g.draw(spriteBatch);
         }
+        torchUIElement.draw(spriteBatch);
+        thermometerGUI.draw(spriteBatch);
     }
     public void updateBranchCount(int newAmnt)
     {
@@ -109,5 +119,13 @@ public class GUI {
     public void updateTinderCount(int newAmnt)
     {
         tinderCounter.setCount(newAmnt);
+    }
+    public void updateTorchUI(float pct)
+    {
+        torchUIElement.updatePercent(pct);
+    }
+    public void updateThermoGUI(float hp)
+    {
+        thermometerGUI.updateHealth(hp);
     }
 }
