@@ -165,6 +165,11 @@ public class Player extends GameObject{
         return stick.getSprite().getBoundingRectangle().overlaps(this.getSprite().getBoundingRectangle());
     }
 
+    public boolean overMap(GoalMap map)
+    {
+        return map.getSprite().getBoundingRectangle().overlaps(this.getSprite().getBoundingRectangle());
+    }
+
     public boolean pickUpStick(Stick stick)
     {
         if(overStick(stick))

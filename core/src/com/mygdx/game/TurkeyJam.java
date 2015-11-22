@@ -33,7 +33,8 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 	Sound windAmbient;
 	Sound fireAmbient;
 	Music fireMusic;
-
+	boolean gameOver;
+	GoalMap target;
 	float mapHeight, mapWidth;
 
 	long windID, fireID;
@@ -56,8 +57,11 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		player = new Player(new Texture("art/sprites/PlayerChar.png"));
 		player.setSpeed(0.75f);
 		testStick = new Stick(new Sprite(new Texture("art/sprites/Stick.png")));
+		target = new GoalMap(new Sprite(new Texture("art/sprites/map.png")));
         world.addGameObject(player);
 		world.addGameObject(testStick);
+		world.addGameObject(target);
+
 		camera = new GameCamera();
 		camera.setToOrtho(false, w, h);
         player.setPosition(11*64,64*64 - 9*64);
@@ -96,6 +100,11 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
         world.render(camera,spriteBatch);
 		movePlayer();
 		healPlayer();
+		if(player.overMap(target))
+		{
+			gameOver = true;
+			System.out.println("Game Over");
+		}
     }
 
 	@Override
