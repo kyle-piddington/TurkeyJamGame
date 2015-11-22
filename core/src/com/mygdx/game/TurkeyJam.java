@@ -53,7 +53,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor{
 		TiledMapTileLayer temp = (TiledMapTileLayer) world.getMap().getLayers().get(0);
 		mapHeight = temp.getHeight() * temp.getTileHeight();
 		mapWidth = temp.getWidth() * temp.getTileWidth();
-		player = new Player(new Sprite(new Texture("art/sprites/PlayerPlaceholder.png")));
+		player = new Player(new Texture("art/sprites/PlayerChar.png"));
 		player.setSpeed(0.75f);
 		testStick = new Stick(new Sprite(new Texture("art/sprites/Stick.png")));
         world.addGameObject(player);

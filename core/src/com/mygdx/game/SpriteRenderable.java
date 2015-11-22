@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector3;
  * Created by kpidding on 11/21/15.
  */
 public class SpriteRenderable implements Renderable {
-    private Sprite sprite;
+    protected Sprite sprite;
     public SpriteRenderable(Sprite sprite)
     {
         this.sprite = sprite;

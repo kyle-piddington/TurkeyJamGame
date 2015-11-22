@@ -149,9 +149,10 @@ public class World {
         Texture stickTexture = new Texture("art/sprites/Stick.png");
         for(int i = 0; i < obs.getCount(); i++)
         {
-            Stick s = new Stick(new Sprite(stickTexture));
+            Sprite stickSprite = new Sprite(stickTexture);
+            stickSprite.setPosition((Float) obs.get(i).getProperties().get("x"), (Float) obs.get(i).getProperties().get("y"));
 
-            s.setPosition((Float) obs.get(i).getProperties().get("x"), (Float) obs.get(i).getProperties().get("y"));
+            Stick s = new Stick(stickSprite);
             addGameObject(s);
         }
 
@@ -281,11 +282,11 @@ public class World {
         float w = player.getSprite().getWidth()  *  getSign(direction.x);
         float h = player.getSprite().getHeight() *  getSign(direction.y);
 
-        int cellInitialX = (int)(Math.floor(player.getSprite().getX()/tileSize)) + 1;
-        int cellInitialY = (int)(Math.floor(player.getSprite().getY()/tileSize));
+        int cellInitialX = (int)(Math.round(player.getSprite().getX()/tileSize));
+        int cellInitialY = (int)(Math.round(player.getSprite().getY()/tileSize));
 
-        int cellFinalX = (int)Math.floor((player.getSprite().getX() + direction.x + w/2)/tileSize) + 1;
-        int cellFinalY = (int)Math.floor((player.getSprite().getY() + direction.y + h/2)/tileSize);
+        int cellFinalX = (int)Math.round((player.getSprite().getX() + direction.x + w/2)/tileSize);
+        int cellFinalY = (int)Math.round((player.getSprite().getY() + direction.y + h/2)/tileSize);
 
         if(trees.getCell(cellFinalX,cellInitialY)!=null)
         {
