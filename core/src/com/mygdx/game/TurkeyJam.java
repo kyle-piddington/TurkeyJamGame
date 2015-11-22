@@ -50,6 +50,8 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 	SpriteBatch endGameBatch;
 	Sprite winGame;
 	Sprite loseGame;
+	float endScreenScale;
+	float delayTime;
 
     private boolean blizzardCalmed = false;
     private  static final float BLIZZARD_MIN =  20.f;
@@ -238,11 +240,15 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 		endGameBatch = new SpriteBatch();
 		winGame = new Sprite(new Texture("art/sprites/WinScreen.png"));
 		loseGame = new Sprite(new Texture("art/sprites/DeathScreen.png"));
-
+		//endScreenScale = (winGame.getHeight()/Gdx.graphics.getHeight());
+		//loseGame.scale(endScreenScale);
+		//winGame.scale(endScreenScale);
+		System.out.println(Gdx.graphics.getWidth() + " " + Gdx.graphics.getHeight());
         gameGui = new GUI(this);
 	}
 
-
+	//800/640 -> 100/80 -> 5/4 -> 1.2 -> 0.8
+	//600/480 -> 5/4
 	@Override
 	public void render () {
 
@@ -305,6 +311,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 		}
 		else if(!player.getLifeStatus())
 		{
+			//System.
 			slowSteps.dispose();
 			medSteps.dispose();
 			fastSteps.dispose();
@@ -314,6 +321,8 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 
 			endGameBatch.begin();
 			loseGame.draw(endGameBatch);
+
+
 			endGameBatch.end();
 		}
 		else if(player.returnedHome())
@@ -329,6 +338,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 
 			endGameBatch.begin();
 			winGame.draw(endGameBatch);
+			//winGame.scale(endScreenScale);
 			endGameBatch.end();
 		}
 
