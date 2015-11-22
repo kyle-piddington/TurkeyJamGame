@@ -205,10 +205,12 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 
 		windID = windAmbient.loop(0.2f);
 		fireID = fireAmbient.loop(0f);
+        fireAmbient.pause();
 
 		fireMusic.play();
 		fireMusic.setLooping(true);
 		fireMusic.setVolume(0f);
+        fireMusic.stop();
 
         fastID = fastSteps.play(1f);
         fastSteps.pause();
@@ -221,14 +223,6 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
         slowID = slowSteps.play(1f);
         slowSteps.pause();
         slowSteps.setLooping(slowID, true);
-        /*
-		fastSteps.setVolume(1f);
-        fastSteps.setLooping(true);
-		medSteps.setVolume(1f);
-        medSteps.setLooping(true);
-		slowSteps.setVolume(1f);
-        slowSteps.setLooping(true);
-        */
 
         fireUI = new FireUIElement();
 		Gdx.input.setInputProcessor(this);
@@ -564,6 +558,9 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 
 		if(volume != 0f) {
 
+            fireAmbient.resume();
+            if(!fireMusic.isPlaying())
+                fireMusic.play();
 			fireMusic.setVolume(musicVolume - 0.05f);
 			windAmbient.setVolume(windID, 0.25f - Math.max(0f, Math.min(0.24f, volume / 5)));
 			fireAmbient.setVolume(fireID, musicVolume);
@@ -579,8 +576,8 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 		heatLevel = player.getHeat();
 		volume = Math.min(1f, (100f - heatLevel) * 0.01f + 0.2f);
 
-		fireMusic.setVolume(0f);
-		fireAmbient.setVolume(fireID, 0f);
+		fireMusic.stop();
+		fireAmbient.pause();
 		windAmbient.setVolume(windID, volume);
 	}
 
