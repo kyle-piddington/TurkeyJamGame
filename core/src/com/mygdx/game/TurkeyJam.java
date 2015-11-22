@@ -35,12 +35,13 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 	Sound fastSteps;
 	Sound medSteps;
 	Sound slowSteps;
+    Sound endMusic;
 	Music fireMusic;
     BlizzardMask blizMask;
 	GoalMap target;
 	float mapHeight, mapWidth;
     float blizzardtimer = 30.0f;
-	long windID, fireID, torchID, fastID, medID, slowID;
+	long windID, fireID, torchID, fastID, medID, slowID, endID;
     Random rand = new Random(System.currentTimeMillis());
 	boolean moveLeft,moveRight,moveUp,moveDown;
     private CameraDirection camDir = CameraDirection.NORTH;
@@ -203,6 +204,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 		fireAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/fire_sound.wav"));
         torchAmbeint = Gdx.audio.newSound(Gdx.files.internal("sound/fire_sound.wav"));
 		windAmbient = Gdx.audio.newSound(Gdx.files.internal("sound/wind_sound.wav"));
+        endMusic = Gdx.audio.newSound(Gdx.files.internal("sound/end_music.mp3"));
 
 		fastSteps = Gdx.audio.newSound(Gdx.files.internal("sound/footsteps_fast.wav"));
 		medSteps = Gdx.audio.newSound(Gdx.files.internal("sound/footsteps_med.wav"));
@@ -215,6 +217,9 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
 
         torchID = torchAmbeint.loop(0.7f);
         torchAmbeint.pause();
+
+        endID = endMusic.loop(0.5f);
+        endMusic.pause();
 
 		fireMusic.play();
 		fireMusic.setLooping(true);
@@ -299,6 +304,7 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
             updateGUI();
 			movePlayer();
 			healPlayer();
+            playEndTheme();
 			player.overMap(target);
 
 			if(player.foundMap())
@@ -645,6 +651,19 @@ public class TurkeyJam extends ApplicationAdapter implements InputProcessor, Act
             torchAmbeint.setVolume(torchID, 0.7f * litPercent);
             torchAmbeint.resume();
         }
+    }
+
+    private void playEndTheme()
+    {
+        float heatLevel;
+
+        heatLevel = player.getHeat();
+        if (heatLevel < 45f) {
+            endMusic.resume();
+            endMusic.setVolume(endID, 0.8f - heatLevel * 0.01f);
+        }
+        else
+            endMusic.pause();
     }
 
 	@Override
